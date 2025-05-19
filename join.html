@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Polaris</title>
+  <title>Polaris Login/Register</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -25,14 +25,13 @@
 
     <main class="main-content">
       <h1 class="rainbow-text-yellowwhite">Join Polaris</h1>
-
       <h3>Username</h3>
       <input type="text" id="username">
       <h3>Password</h3>
       <input type="password" id="password">
       <br><br>
       <div class="buttons">
-        <button id="registerBtn">Create Account</button>
+        <button id="registerBtn">Register</button>
         <button id="loginBtn">Login</button>
       </div>
       <hr />
@@ -44,7 +43,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDZxd9oql0a8y8fXe-z_6qfxRAqGQUsFIg",
@@ -56,54 +55,35 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    async function hashPassword(password) {
-      const encoder = new TextEncoder();
-      const data = encoder.encode(password);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-      return Array.from(new Uint8Array(hashBuffer))
-        .map(b => b.toString(16).padStart(2, '0'))
-        .join('');
-    }
-
-    async function registerUser(username, password) {
-      const userRef = doc(db, "users", username);
-      const snap = await getDoc(userRef);
-      if (snap.exists()) {
-        alert("Username already taken.");
-        return;
-      }
-      const hashed = await hashPassword(password);
-      await setDoc(userRef, { password: hashed });
-      alert("Account created!");
-    }
-
-    async function loginUser(username, password) {
-      const userRef = doc(db, "users", username);
-      const snap = await getDoc(userRef);
-      if (!snap.exists()) {
-        alert("User not found.");
-        return;
-      }
-      const hashed = await hashPassword(password);
-      if (snap.data().password === hashed) {
-        alert("Login successful!");
-      } else {
-        alert("Wrong password.");
-      }
-    }
+    const auth = getAuth(app);
+    const customDomain = "@myapp.com"; // Change this to whatever fixed domain you prefer
 
     document.getElementById("registerBtn").addEventListener("click", () => {
-      const user = document.getElementById("username").value.trim();
-      const pass = document.getElementById("password").value;
-      if (user && pass) registerUser(user, pass);
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+      if (!username || !password) return alert("Both fields are lit, so fill them in!");
+      const email = username + customDomain;
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          alert("User registered");
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
     });
 
     document.getElementById("loginBtn").addEventListener("click", () => {
-      const user = document.getElementById("username").value.trim();
-      const pass = document.getElementById("password").value;
-      if (user && pass) loginUser(user, pass);
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+      if (!username || !password) return alert("Fill in both fields, fam.");
+      const email = username + customDomain;
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          alert("Login successful");
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
     });
   </script>
 </body>
