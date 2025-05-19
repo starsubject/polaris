@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Polaris Chat</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Polaris</h2>
+      <div>
+        <p><strong>User:</strong> <span id="username">Loading...</span></p>
+        <hr style="margin: 20px 0;">
+        <p style="margin-bottom: 10px;">Channels</p>
+        <nav>
+          <ul>
+            <li><a href="chat.html?id=1"># general</a></li>
+            <li><a href="chat.html?id=2"># support</a></li>
+            <li><a href="chat.html?id=3"># memes</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="buttons">
+        <button onclick="location.href='index.html'">🏠 Home</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <h1 id="chatTitle">Loading chat...</h1>
+      <div id="messages" style="max-height: 70vh; overflow-y: auto; margin-bottom: 20px;"></div>
+      <div class="buttons">
+        <input type="text" id="messageInput" placeholder="Type your message..." style="flex: 1; padding: 10px; border-radius: 8px; border: none; max-width: 70%;">
+        <button id="sendBtn">Send</button>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      serverTimestamp,
+      query,
+      orderBy,
+      onSnapshot
+    } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZxd9oql0a8y8fXe-z_6qfxRAqGQUsFIg",
+      authDomain: "polaris-a273e.firebaseapp.com",
+      projectId: "polaris-a273e",
+      storageBucket: "polaris-a273e.firebasestorage.app",
+      messagingSenderId: "677589636568",
+      appId: "1:677589636568:web:bf1c0dbaa9ed1e337b4ead"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const queryParams = new URLSearchParams(window.location.search);
+    const chatId = queryParams.get("id") || "1";
+    const chatTitle = document.getElementById("chatTitle");
+    const usernameSpan = document.getElementById("username");
+    const messagesDiv = document.getElementById("messages");
+    const input = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    let currentUsername = null;
+
+    chatTitle.innerText = "Chat Room #" + chatId;
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        location.href = "join.html";
+        return;
+      }
+      const email = user.email;
+      currentUsername = email.split("@")[0];
+      usernameSpan.innerText = currentUsername;
+
+      const msgRef = collection(db, "chats", chatId, "messages");
+      const q = query(msgRef, orderBy("timestamp", "asc"));
+
+      onSnapshot(q, (snapshot) => {
+        messagesDiv.innerHTML = "";
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          const div = document.createElement("div");
+          const time = data.timestamp?.toDate().toLocaleTimeString() || "⏳";
+          div.innerHTML = `<strong>${data.sender}</strong> [${time}]: ${data.content}`;
+          messagesDiv.appendChild(div);
+        });
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      });
+    });
+
+    sendBtn.addEventListener("click", async () => {
+      const msg = input.value.trim();
+      if (!msg || !currentUsername) return;
+      await addDoc(collection(db, "chats", chatId, "messages"), {
+        content: msg,
+        sender: currentUsername,
+        timestamp: serverTimestamp()
+      });
+      input.value = "";
+      input.focus();
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendBtn.click();
+    });
+  </script>
+</body>
+</html>
