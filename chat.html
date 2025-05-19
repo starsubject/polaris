@@ -16,9 +16,9 @@
         <p style="margin-bottom: 10px;">Channels</p>
         <nav>
           <ul>
-            <li><a href="chat.html?id=1"># general</a></li>
-            <li><a href="chat.html?id=2"># support</a></li>
-            <li><a href="chat.html?id=3"># memes</a></li>
+            <li><a href="chat.html?community=OfficialChat&channel=general"># general</a></li>
+            <li><a href="chat.html?community=OfficialChat&channel=support"># support</a></li>
+            <li><a href="chat.html?community=OfficialChat&channel=memes"># memes</a></li>
           </ul>
         </nav>
       </div>
@@ -63,8 +63,10 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const queryParams = new URLSearchParams(window.location.search);
-    const chatId = queryParams.get("id") || "1";
+    const params = new URLSearchParams(location.search);
+    const community = params.get("community") || "OfficialChat";
+    const channel = params.get("channel") || "general";
+
     const chatTitle = document.getElementById("chatTitle");
     const usernameSpan = document.getElementById("username");
     const messagesDiv = document.getElementById("messages");
@@ -73,26 +75,27 @@
 
     let currentUsername = null;
 
-    chatTitle.innerText = "Chat Room #" + chatId;
+    chatTitle.innerText = `#${channel} in ${community}`;
 
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         location.href = "join.html";
         return;
       }
+
       const email = user.email;
       currentUsername = email.split("@")[0];
       usernameSpan.innerText = currentUsername;
 
-      const msgRef = collection(db, "chats", chatId, "messages");
+      const msgRef = collection(db, "chats", community, channel);
       const q = query(msgRef, orderBy("timestamp", "asc"));
 
       onSnapshot(q, (snapshot) => {
         messagesDiv.innerHTML = "";
         snapshot.forEach((doc) => {
           const data = doc.data();
-          const div = document.createElement("div");
           const time = data.timestamp?.toDate().toLocaleTimeString() || "⏳";
+          const div = document.createElement("div");
           div.innerHTML = `<strong>${data.sender}</strong> [${time}]: ${data.content}`;
           messagesDiv.appendChild(div);
         });
@@ -103,7 +106,7 @@
     sendBtn.addEventListener("click", async () => {
       const msg = input.value.trim();
       if (!msg || !currentUsername) return;
-      await addDoc(collection(db, "chats", chatId, "messages"), {
+      await addDoc(collection(db, "chats", community, channel), {
         content: msg,
         sender: currentUsername,
         timestamp: serverTimestamp()
