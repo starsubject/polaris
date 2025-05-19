@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Polaris</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Polaris</h2>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="settings.html">Logout</a></li>
+          <li><a href="discover.html">Discover Spaces</a></li>
+        </ul>
+        <div class="buttons">
+          <button onclick="location.href='new.html'">New: Moderator rounds are open!</button>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1 class="rainbow-text-yellowwhite">Join Polaris</h1>
+
+      <h3>Username</h3>
+      <input type="text" id="username">
+      <h3>Password</h3>
+      <input type="password" id="password">
+      <br><br>
+      <div class="buttons">
+        <button id="registerBtn">Create Account</button>
+        <button id="loginBtn">Login</button>
+      </div>
+      <hr />
+      <div class="footer-note">
+        <p>Made by 3 passionate people.</p>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZxd9oql0a8y8fXe-z_6qfxRAqGQUsFIg",
+      authDomain: "polaris-a273e.firebaseapp.com",
+      projectId: "polaris-a273e",
+      storageBucket: "polaris-a273e.firebasestorage.app",
+      messagingSenderId: "677589636568",
+      appId: "1:677589636568:web:bf1c0dbaa9ed1e337b4ead"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function hashPassword(password) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(password);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      return Array.from(new Uint8Array(hashBuffer))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+    }
+
+    async function registerUser(username, password) {
+      const userRef = doc(db, "users", username);
+      const snap = await getDoc(userRef);
+      if (snap.exists()) {
+        alert("Username already taken.");
+        return;
+      }
+      const hashed = await hashPassword(password);
+      await setDoc(userRef, { password: hashed });
+      alert("Account created!");
+    }
+
+    async function loginUser(username, password) {
+      const userRef = doc(db, "users", username);
+      const snap = await getDoc(userRef);
+      if (!snap.exists()) {
+        alert("User not found.");
+        return;
+      }
+      const hashed = await hashPassword(password);
+      if (snap.data().password === hashed) {
+        alert("Login successful!");
+      } else {
+        alert("Wrong password.");
+      }
+    }
+
+    document.getElementById("registerBtn").addEventListener("click", () => {
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value;
+      if (user && pass) registerUser(user, pass);
+    });
+
+    document.getElementById("loginBtn").addEventListener("click", () => {
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value;
+      if (user && pass) loginUser(user, pass);
+    });
+  </script>
+</body>
+</html>
