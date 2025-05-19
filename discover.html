@@ -25,117 +25,79 @@
 
     <main class="main-content">
       <h1>Discover Educational Chat Spaces</h1>
-
-      <section class="space-category">
-        <h2>Popular Spaces</h2>
-        <div class="space-grid">
-          <div class="app-card space-card">
-            <div class="app-header">
-              <img src="https://via.placeholder.com/60/FFD700/000000?text=MATH" alt="Math Space Icon" class="app-icon">
-              <div>
-                <h2 style="margin: 0;">Math Mavericks</h2>
-                <p style="margin: 0; font-size: 0.9rem; color: #ccc;">
-                  Dive into algebra, calculus, and geometry.
-                </p>
-              </div>
-            </div>
-            <div class="creator-info">
-              <img src="/img/pfp/b.png" alt="Creator" class="creator-pic">
-              <span>Hosted by <strong>MathGuru</strong></span>
-            </div>
-            <p>Members: 1,234</p>
-            <div class="tags">
-              <span class="tag">Mathematics</span>
-              <span class="tag">High School</span>
-              <span class="tag">College Prep</span>
-            </div>
-            <button class="join-space-btn">Join Space</button>
-          </div>
-
-          <div class="app-card space-card">
-            <div class="app-header">
-              <img src="https://via.placeholder.com/60/ADD8E6/000000?text=HIST" alt="History Space Icon" class="app-icon">
-              <div>
-                <h2 style="margin: 0;">History Buffs Hub</h2>
-                <p style="margin: 0; font-size: 0.9rem; color: #ccc;">
-                  Explore ancient civilizations and modern conflicts.
-                </p>
-              </div>
-            </div>
-            <div class="creator-info">
-              <img src="/img/pfp/c.png" alt="Creator" class="creator-pic">
-              <span>Hosted by <strong>TimeTraveler</strong></span>
-            </div>
-            <p>Members: 987</p>
-            <div class="tags">
-              <span class="tag">History</span>
-              <span class="tag">World Events</span>
-              <span class="tag">Research</span>
-            </div>
-            <button class="join-space-btn">Join Space</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="space-category">
-        <h2>Science & Tech</h2>
-        <div class="space-grid">
-          <div class="app-card space-card">
-            <div class="app-header">
-              <img src="https://via.placeholder.com/60/90EE90/000000?text=BIO" alt="Biology Space Icon" class="app-icon">
-              <div>
-                <h2 style="margin: 0;">Biology Breakdown</h2>
-                <p style="margin: 0; font-size: 0.9rem; color: #ccc;">
-                  From cells to ecosystems, everything alive.
-                </p>
-              </div>
-            </div>
-            <div class="creator-info">
-              <img src="/img/pfp/d.png" alt="Creator" class="creator-pic">
-              <span>Hosted by <strong>BioExplorer</strong></span>
-            </div>
-            <p>Members: 765</p>
-            <div class="tags">
-              <span class="tag">Biology</span>
-              <span class="tag">Life Science</span>
-              <span class="tag">Ecology</span>
-            </div>
-            <button class="join-space-btn">Join Space</button>
-          </div>
-
-          <div class="app-card space-card">
-            <div class="app-header">
-              <img src="https://via.placeholder.com/60/FF6347/000000?text=CODE" alt="Coding Space Icon" class="app-icon">
-              <div>
-                <h2 style="margin: 0;">Code Crafters</h2>
-                <p style="margin: 0; font-size: 0.9rem; color: #ccc;">
-                  Learn Python, JavaScript, and more.
-                </p>
-              </div>
-            </div>
-            <div class="creator-info">
-              <img src="/img/pfp/e.png" alt="Creator" class="creator-pic">
-              <span>Hosted by <strong>DevPro</strong></span>
-            </div>
-            <p>Members: 2,100</p>
-            <div class="tags">
-              <span class="tag">Programming</span>
-              <span class="tag">Coding</span>
-              <span class="tag">Web Dev</span>
-            </div>
-            <button class="join-space-btn">Join Space</button>
-          </div>
-        </div>
-      </section>
-
+      <div id="communityGrid" class="space-grid"></div>
       <hr />
-
       <div class="footer-note">
         <p>Made by 3 passionate people.</p>
       </div>
     </main>
   </div>
 
-  <script type="module" src="script.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZxd9oql0a8y8fXe-z_6qfxRAqGQUsFIg",
+      authDomain: "polaris-a273e.firebaseapp.com",
+      projectId: "polaris-a273e",
+      storageBucket: "polaris-a273e.firebasestorage.app",
+      messagingSenderId: "677589636568",
+      appId: "1:677589636568:web:bf1c0dbaa9ed1e337b4ead"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const grid = document.getElementById("communityGrid");
+
+    async function loadCommunities() {
+      const chatCollection = collection(db, "chats");
+      const communities = await getDocs(chatCollection);
+
+      for (const communityDoc of communities.docs) {
+        const communityId = communityDoc.id;
+        const channelsSnap = await getDocs(collection(db, "chats", communityId));
+
+        // Show only if it has at least one channel
+        if (!channelsSnap.empty) {
+          const firstChannel = channelsSnap.docs[0].id;
+
+          const card = document.createElement("div");
+          card.className = "app-card space-card";
+          card.innerHTML = `
+            <div class="app-header">
+              <img src="https://via.placeholder.com/60/3c5b8e/ffffff?text=${communityId.charAt(0).toUpperCase()}" alt="${communityId}" class="app-icon">
+              <div>
+                <h2 style="margin: 0;">${communityId}</h2>
+                <p style="margin: 0; font-size: 0.9rem; color: #ccc;">
+                  A growing educational space for curious minds.
+                </p>
+              </div>
+            </div>
+            <p>Channel count: ${channelsSnap.size}</p>
+            <div class="tags">
+              <span class="tag">Community</span>
+              <span class="tag">Chat</span>
+              <span class="tag">Explore</span>
+            </div>
+            <button class="join-space-btn" onclick="location.href='chat.html?community=${communityId}&channel=${firstChannel}'">Join Space</button>
+          `;
+          grid.appendChild(card);
+        }
+      }
+    }
+
+    loadCommunities();
+
+    document.getElementById("moderatorRoundsButton").addEventListener("click", () => {
+      alert("Moderator rounds are indeed open! Click OK to learn more.");
+      window.location.href = "new.html";
+    });
+  </script>
 </body>
 </html>
