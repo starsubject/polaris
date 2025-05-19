@@ -1,90 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Polaris Login/Register</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Polaris</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <aside class="sidebar">
-      <h2>Polaris</h2>
-      <nav>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="join.html">Login</a></li>
-          <li><a href="settings.html">Logout</a></li>
-          <li><a href="discover.html">Discover Spaces</a></li>
-        </ul>
-        <div class="buttons">
-          <button onclick="location.href='new.html'">New: Moderator rounds are open!</button>
-        </div>
-      </nav>
-    </aside>
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Polaris</h2>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="login.html" class="active-nav-link">Login</a></li>
+                    <li><a href="settings.html">Logout</a></li>
+                    <li><a href="discover.html">Discover Spaces</a></li>
+                </ul>
+                <div class="buttons">
+                    <button id="moderatorRoundsButton">New: Moderator rounds are open!</button>
+                </div>
+            </nav>
+        </aside>
 
-    <main class="main-content">
-      <h1 class="rainbow-text-yellowwhite">Join Polaris</h1>
-      <h3>Username</h3>
-      <input type="text" id="username">
-      <h3>Password</h3>
-      <input type="password" id="password">
-      <br><br>
-      <div class="buttons">
-        <button id="registerBtn">Register</button>
-        <button id="loginBtn">Login</button>
-      </div>
-      <hr />
-      <div class="footer-note">
-        <p>Made by 3 passionate people.</p>
-      </div>
-    </main>
-  </div>
+        <main class="main-content">
+            <h1>Login to Polaris</h1>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
+            <div class="login-card">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" placeholder="Enter your username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" placeholder="Enter your password">
+                </div>
+                <div class="login-buttons">
+                    <button id="loginBtn">Login</button>
+                    <button id="registerBtn">Register</button>
+                </div>
+            </div>
+        </main>
+    </div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDZxd9oql0a8y8fXe-z_6qfxRAqGQUsFIg",
-      authDomain: "polaris-a273e.firebaseapp.com",
-      projectId: "polaris-a273e",
-      storageBucket: "polaris-a273e.firebasestorage.app",
-      messagingSenderId: "677589636568",
-      appId: "1:677589636568:web:bf1c0dbaa9ed1e337b4ead"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const customDomain = "@myapp.com"; // Change this to whatever fixed domain you prefer
-
-    document.getElementById("registerBtn").addEventListener("click", () => {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value;
-      if (!username || !password) return alert("Both fields are lit, so fill them in!");
-      const email = username + customDomain;
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          alert("User registered");
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
-    });
-
-    document.getElementById("loginBtn").addEventListener("click", () => {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value;
-      if (!username || !password) return alert("Fill in both fields, fam.");
-      const email = username + customDomain;
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          alert("Login successful");
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
-    });
-  </script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>

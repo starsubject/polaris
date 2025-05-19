@@ -1,2 +1,2 @@
 # polaris
-The polaris chat repository 
+The polaris chat repo
