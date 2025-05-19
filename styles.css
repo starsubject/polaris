@@ -1,280 +1,480 @@
-
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 
+/* Basic Reset & Body Styles */
+:root {
+  --primary-bg: #1a1a2e; /* Dark background */
+  --secondary-bg: #16213e; /* Slightly lighter dark for cards/elements */
+  --sidebar-bg: #0f3460; /* Even darker blue for sidebar */
+  --text-color: #e0e0e0; /* Light grey for general text */
+  --heading-color: #f0f0f0; /* Lighter grey for headings */
+  --accent-color-yellow: #fddb3a; /* Vibrant yellow */
+  --accent-color-white: #ffffff; /* Pure white */
+  --border-color: #0d1a2f; /* Dark border */
+  --tag-bg: #2d4c82; /* Tag background */
+  --tag-text: #b0c4de; /* Tag text color */
+  --button-bg: #e94560; /* Button background (reddish) */
+  --button-hover-bg: #b93b51; /* Button hover background */
+  --link-color: #406882; /* Link color */
+  --link-hover-color: #6998ab; /* Link hover color */
+}
+
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
 }
 
-html, body {
-  height: 100%;
-  background: #0a1d37;
-  color: #fff;
-  overflow: hidden;
+body {
+  font-family: 'Poppins', sans-serif; /* Applied Poppins font here */
+  background-color: var(--primary-bg);
+  color: var(--text-color);
+  line-height: 1.6;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px; /* Add some padding around the whole container */
 }
 
+/* Container Layout (Flexbox) */
 .container {
   display: flex;
-  height: 100vh;
-  padding: 16px;
-  gap: 16px;
+  width: 100%;
+  max-width: 1200px; /* Limit overall width */
+  background-color: var(--primary-bg); /* Ensure container matches body for seamless look */
+  border-radius: 10px;
+  overflow: hidden; /* Important for border-radius */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Subtle shadow */
 }
 
+/* Sidebar */
 .sidebar {
-  width: 260px;
-  background: #151a2d;
-  padding: 24px 20px;
-  border-radius: 16px;
-  flex-shrink: 0;
+  width: 250px;
+  background-color: var(--sidebar-bg);
+  padding: 30px 20px;
   display: flex;
   flex-direction: column;
-  border: 1px solid #ffffff20;
-  transition: width 0.4s ease;
-}
-
-.sidebar.collapsed {
-  width: 85px;
+  color: var(--heading-color);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3); /* Shadow for separation */
+  border-right: 1px solid var(--border-color); /* Subtle border */
 }
 
 .sidebar h2 {
-  font-size: 1.5rem;
-  color: #00b0ff;
-  margin-bottom: 24px;
+  font-size: 2em;
+  margin-bottom: 40px;
+  text-align: center;
+  color: var(--accent-color-yellow); /* Polaris title in yellow */
+  text-shadow: 0 0 5px var(--accent-color-yellow), 0 0 10px var(--accent-color-yellow);
 }
 
 .sidebar nav ul {
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-grow: 1; /* Pushes buttons to the bottom if content is short */
+}
+
+.sidebar nav ul li {
+  margin-bottom: 10px;
 }
 
 .sidebar nav ul li a {
-  text-decoration: none;
-  color: #ccc;
-  font-weight: 500;
-  padding: 10px 14px;
-  border-radius: 10px;
-  transition: 0.3s;
   display: block;
+  padding: 12px 15px;
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 1.1em;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  border-radius: 5px;
 }
 
 .sidebar nav ul li a:hover {
-  color: #fff;
-  background: #3c5b8e40;
+  background-color: var(--link-hover-color);
+  color: var(--accent-color-white);
+  transform: translateX(5px);
+}
+
+.sidebar nav ul li a.active-nav-link {
+  background-color: var(--link-color); /* Highlight for active link */
+  color: var(--accent-color-white);
+  font-weight: bold;
 }
 
 .sidebar .buttons {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
 }
 
 .sidebar .buttons button {
-  background: #3c5b8e;
-  color: #fff;
+  width: 100%;
+  padding: 12px 15px;
+  background-color: var(--button-bg);
+  color: var(--accent-color-white);
   border: none;
-  padding: 12px;
-  border-radius: 10px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background 0.3s;
+  font-size: 0.95em;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .sidebar .buttons button:hover {
-  background: #4a6fa5;
+  background-color: var(--button-hover-bg);
+  transform: translateY(-2px);
 }
 
+/* Main Content Area */
 .main-content {
-  flex: 1;
-  background: #1f2b45;
-  padding: 40px;
-  border-radius: 16px;
-  overflow-y: auto;
-  border: 1px solid #ffffff20;
+  flex-grow: 1;
+  padding: 30px 40px;
+  background-color: var(--primary-bg);
 }
 
-h1 {
-  color: #00b0ff;
-  margin-bottom: 24px;
+.main-content h1 {
+  font-size: 2.8em;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 700;
 }
 
-.buttons {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 24px;
-}
-
-.buttons button {
-  background: #3c5b8e;
-  color: #fff;
-  padding: 14px 28px;
-  border-radius: 10px;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.buttons button:hover {
-  background: #4a6fa5;
-}
-
-hr {
-  height: 1px;
-  border: none;
-  background: #3c5b8e;
-  margin: 30px 0;
-}
-
-.footer-note {
-  font-size: 0.9rem;
-  color: #aaa;
-  max-width: 600px;
-  line-height: 1.6;
-}
-
-.main-content::-webkit-scrollbar {
-  width: 8px;
-}
-
-.main-content::-webkit-scrollbar-thumb {
-  background: #00b0ff;
-  border-radius: 4px;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.main-content:hover::-webkit-scrollbar-thumb {
-  opacity: 1;
-}
-
+/* Rainbow Text Effect */
 .rainbow-text-yellowwhite {
-  background: linear-gradient(270deg, yellow, white, yellow);
-  background-size: 400% 400%;
+  background: linear-gradient(to right, var(--accent-color-yellow), var(--accent-color-white), var(--accent-color-yellow));
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: flow 5s linear infinite;
+  animation: glow 1.5s infinite alternate; /* Subtle glow animation */
 }
 
-@keyframes flow {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
+@keyframes glow {
+  from { text-shadow: 0 0 5px var(--accent-color-yellow); }
+  to { text-shadow: 0 0 15px var(--accent-color-yellow), 0 0 25px var(--accent-color-white); }
 }
 
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
+
+.main-content h2 {
+  font-size: 1.8em;
+  color: var(--heading-color);
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
 }
 
-.modal-backdrop.show {
-  display: flex;
-  animation: fadeIn 0.3s ease;
-}
-
+/* App Card */
 .app-card {
-  background: #202c45;
-  border-radius: 20px;
-  padding: 30px;
-  width: 90%;
-  max-width: 600px;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
-  animation: popIn 0.4s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes popIn {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  background-color: var(--secondary-bg);
+  border-radius: 10px;
+  padding: 25px;
+  margin-bottom: 40px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-color);
 }
 
 .app-header {
   display: flex;
   align-items: center;
-  gap: 15px;
   margin-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 15px;
 }
 
 .app-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 12px;
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  margin-right: 15px;
   object-fit: cover;
+  border: 2px solid var(--accent-color-yellow);
+}
+
+.app-header h2 {
+  font-size: 1.8em;
+  color: var(--heading-color);
+  margin: 0;
+  border: none; /* Override general h2 border */
+  padding: 0; /* Override general h2 padding */
+}
+
+.app-header p {
+  color: #bbb;
+  font-size: 0.95em;
 }
 
 .creator-info {
   display: flex;
   align-items: center;
-  gap: 10px;
   margin-bottom: 15px;
+  color: var(--tag-text);
+  font-size: 0.9em;
 }
 
 .creator-pic {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
+  margin-right: 8px;
   object-fit: cover;
+  border: 1px solid var(--accent-color-yellow);
+}
+
+.app-card p {
+  margin-bottom: 15px;
+  color: var(--text-color);
 }
 
 .tags {
+  margin-top: 15px;
   display: flex;
-  gap: 8px;
   flex-wrap: wrap;
-  margin: 10px 0 20px;
+  gap: 8px;
 }
 
 .tag {
-  background: #334;
-  color: #aad;
-  padding: 4px 10px;
-  border-radius: 8px;
-  font-size: 0.75rem;
+  background-color: var(--tag-bg);
+  color: var(--tag-text);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8em;
   font-weight: bold;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.get-button {
-  padding: 12px 20px;
-  background: #3c5b8e;
-  color: white;
+/* Recent Updates List */
+.main-content ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 40px;
+}
+
+.main-content ul li {
+  background-color: var(--secondary-bg);
+  margin-bottom: 10px;
+  padding: 15px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.main-content ul li:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+
+/* Horizontal Rule */
+hr {
   border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 40px 0;
+}
+
+/* Footer Note */
+.footer-note {
+  text-align: center;
+  font-size: 0.9em;
+  color: #888;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Login Page Specific Styles */
+.login-card {
+  background-color: var(--secondary-bg);
   border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s ease;
+  padding: 30px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-color);
+  max-width: 400px; /* Limit the width of the login card */
+  margin: 40px auto; /* Center the card horizontally and add vertical margin */
+  text-align: center;
+}
+
+.login-card .form-group {
+  margin-bottom: 20px;
+  text-align: left; /* Align labels and inputs to the left within the group */
+}
+
+.login-card label {
+  display: block; /* Make label take full width */
+  margin-bottom: 8px;
   font-weight: bold;
+  color: var(--heading-color); /* Use a slightly brighter color for labels */
 }
 
-.get-button:hover {
-  background: #4a6fa5;
+.login-card input[type="text"],
+.login-card input[type="password"] {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  background-color: #2a3a5c; /* Slightly different input background */
+  color: var(--text-color);
+  font-size: 1em;
+  outline: none; /* Remove default outline */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.close-button {
-  background: none;
+.login-card input[type="text"]:focus,
+.login-card input[type="password"]:focus {
+  border-color: var(--accent-color-yellow); /* Highlight border on focus */
+  box-shadow: 0 0 0 3px rgba(253, 219, 58, 0.3); /* Subtle glow on focus */
+}
+
+.login-buttons {
+  display: flex;
+  justify-content: space-around; /* Distribute buttons evenly */
+  gap: 15px; /* Space between buttons */
+  margin-top: 30px;
+}
+
+.login-buttons button {
+  flex: 1; /* Allow buttons to grow and take equal space */
+  padding: 12px 20px;
   border: none;
-  color: #aaa;
-  font-size: 1.2rem;
+  border-radius: 5px;
   cursor: pointer;
-  position: absolute;
-  top: 20px;
-  right: 25px;
+  font-size: 1em;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.close-button:hover {
-  color: white;
+#loginBtn {
+  background-color: var(--button-bg); /* Use the main button color */
+  color: var(--accent-color-white);
+}
+
+#loginBtn:hover {
+  background-color: var(--button-hover-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+#registerBtn {
+  background-color: var(--tag-bg); /* Use tag background for register for variety */
+  color: var(--tag-text);
+}
+
+#registerBtn:hover {
+  background-color: #3b609c; /* Slightly darker hover for register */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Adjustments for main content h1 on login page */
+.main-content h1 {
+  /* This h1 is not rainbow on login, so give it a solid color */
+  color: var(--heading-color);
+  background: none; /* Remove gradient */
+  background-clip: unset;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  animation: none; /* Remove glow animation */
+  text-shadow: none; /* Remove text shadow */
+}
+
+
+/* Responsive Design */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    max-width: 600px;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .sidebar h2 {
+    margin-bottom: 20px;
+  }
+
+  .sidebar nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .sidebar nav ul li {
+    margin-bottom: 0;
+  }
+
+  .sidebar nav ul li a {
+    padding: 10px 15px;
+    font-size: 1em;
+  }
+
+  .sidebar .buttons {
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .main-content h1 {
+    font-size: 2.2em;
+    margin-bottom: 20px;
+  }
+
+  .app-card {
+    padding: 20px;
+  }
+
+  .app-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  /* Responsive adjustments for login card */
+  .login-card {
+    margin: 20px auto; /* Adjust margin for smaller screens */
+  }
+
+  .login-buttons {
+    flex-direction: column; /* Stack buttons vertically on small screens */
+  }
+
+  .login-buttons button {
+    width: 100%;
+    margin-bottom: 10px; /* Space between stacked buttons */
+  }
+}
+
+@media (max-width: 500px) {
+  body {
+    padding: 10px;
+  }
+
+  .main-content h1 {
+    font-size: 1.8em;
+  }
+
+  .main-content h2 {
+    font-size: 1.5em;
+  }
+
+  .app-header h2 {
+    font-size: 1.5em;
+  }
+
+  .app-header p {
+    font-size: 0.85em;
+  }
+
+  .sidebar nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .login-card {
+    padding: 15px; /* Even smaller padding on very small screens */
+  }
 }
