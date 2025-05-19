@@ -478,3 +478,187 @@ hr {
     padding: 15px; /* Even smaller padding on very small screens */
   }
 }
+
+/* --- Additions for Discover Spaces Page (discover.html) --- */
+.space-category {
+  margin-bottom: 50px;
+}
+
+.space-category h2 {
+  font-size: 1.6em;
+  color: var(--accent-color-yellow); /* Category headings stand out */
+  border-bottom: 2px solid var(--accent-color-yellow); /* Stronger border */
+  padding-bottom: 10px;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.space-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+  gap: 30px; /* Space between cards */
+}
+
+.space-card {
+  /* Inherits most styles from .app-card */
+  display: flex;
+  flex-direction: column; /* Stack content vertically */
+  justify-content: space-between; /* Push button to bottom */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.space-card:hover {
+  transform: translateY(-8px); /* Lift effect on hover */
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+}
+
+.space-card .app-header {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}
+
+.space-card .app-icon {
+  border-color: var(--link-color); /* Different border color for space icons */
+}
+
+.space-card p {
+  flex-grow: 1; /* Allow content to grow */
+  margin-bottom: 10px; /* Adjust margin for card internal elements */
+  color: var(--text-color);
+}
+
+.space-card .tags {
+  margin-top: 10px;
+  margin-bottom: 15px; /* Space above the button */
+}
+
+.join-space-btn {
+  width: 100%;
+  padding: 12px 15px;
+  background-color: var(--accent-color-yellow); /* Yellow join button */
+  color: var(--secondary-bg); /* Dark text on yellow */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  margin-top: auto; /* Push button to the bottom of the flex item */
+}
+
+.join-space-btn:hover {
+  background-color: #e6c530; /* Slightly darker yellow on hover */
+  transform: translateY(-2px);
+}
+
+/* --- Additions for Settings Page (settings.html) --- */
+.settings-section {
+  background-color: var(--secondary-bg);
+  border-radius: 10px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+}
+
+.settings-section h2 {
+  font-size: 1.5em;
+  color: var(--heading-color);
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  text-align: left;
+}
+
+/* Inherits .form-group and input styles from login.html */
+.settings-section .form-group {
+  margin-bottom: 15px;
+}
+
+.settings-section input[type="text"],
+.settings-section input[type="password"] {
+  /* Inherits styles from login inputs */
+  padding: 10px 15px; /* Slightly smaller padding for settings inputs */
+  font-size: 0.95em;
+}
+
+.settings-section input[disabled] {
+  background-color: #334a6d; /* Different background for disabled inputs */
+  color: #99aab5;
+  cursor: not-allowed;
+}
+
+.save-settings-btn,
+.change-password-btn {
+  padding: 10px 20px;
+  background-color: var(--link-color); /* Blueish button */
+  color: var(--accent-color-white);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  margin-top: 15px;
+  margin-right: 10px; /* Space between multiple buttons if needed */
+}
+
+.save-settings-btn:hover,
+.change-password-btn:hover {
+  background-color: var(--link-hover-color);
+  transform: translateY(-2px);
+}
+
+.logout-section {
+  text-align: center;
+  border-top: 1px solid var(--border-color);
+  padding-top: 25px;
+  margin-top: 40px;
+}
+
+.logout-section p {
+  margin-bottom: 20px;
+  color: #bbb;
+}
+
+.danger-button {
+  background-color: var(--button-bg); /* Red button for danger action */
+  color: var(--accent-color-white);
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.1em;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.danger-button:hover {
+  background-color: var(--button-hover-bg);
+  transform: translateY(-2px);
+}
+
+/* Responsive adjustments for new sections */
+@media (max-width: 900px) {
+  .space-grid {
+      grid-template-columns: 1fr; /* Stack space cards vertically on smaller screens */
+  }
+}
+
+@media (max-width: 500px) {
+  .settings-section {
+      padding: 15px;
+  }
+  .save-settings-btn,
+  .change-password-btn {
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 10px; /* Stack buttons */
+  }
+  .danger-button {
+      width: 100%;
+  }
+}
