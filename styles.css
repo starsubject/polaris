@@ -1,0 +1,280 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+html, body {
+  height: 100%;
+  background: #0a1d37;
+  color: #fff;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+  padding: 16px;
+  gap: 16px;
+}
+
+.sidebar {
+  width: 260px;
+  background: #151a2d;
+  padding: 24px 20px;
+  border-radius: 16px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ffffff20;
+  transition: width 0.4s ease;
+}
+
+.sidebar.collapsed {
+  width: 85px;
+}
+
+.sidebar h2 {
+  font-size: 1.5rem;
+  color: #00b0ff;
+  margin-bottom: 24px;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar nav ul li a {
+  text-decoration: none;
+  color: #ccc;
+  font-weight: 500;
+  padding: 10px 14px;
+  border-radius: 10px;
+  transition: 0.3s;
+  display: block;
+}
+
+.sidebar nav ul li a:hover {
+  color: #fff;
+  background: #3c5b8e40;
+}
+
+.sidebar .buttons {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar .buttons button {
+  background: #3c5b8e;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.sidebar .buttons button:hover {
+  background: #4a6fa5;
+}
+
+.main-content {
+  flex: 1;
+  background: #1f2b45;
+  padding: 40px;
+  border-radius: 16px;
+  overflow-y: auto;
+  border: 1px solid #ffffff20;
+}
+
+h1 {
+  color: #00b0ff;
+  margin-bottom: 24px;
+}
+
+.buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.buttons button {
+  background: #3c5b8e;
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.buttons button:hover {
+  background: #4a6fa5;
+}
+
+hr {
+  height: 1px;
+  border: none;
+  background: #3c5b8e;
+  margin: 30px 0;
+}
+
+.footer-note {
+  font-size: 0.9rem;
+  color: #aaa;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+.main-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background: #00b0ff;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.main-content:hover::-webkit-scrollbar-thumb {
+  opacity: 1;
+}
+
+.rainbow-text-yellowwhite {
+  background: linear-gradient(270deg, yellow, white, yellow);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: flow 5s linear infinite;
+}
+
+@keyframes flow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-backdrop.show {
+  display: flex;
+  animation: fadeIn 0.3s ease;
+}
+
+.app-card {
+  background: #202c45;
+  border-radius: 20px;
+  padding: 30px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+  animation: popIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.app-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.creator-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.creator-pic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0 20px;
+}
+
+.tag {
+  background: #334;
+  color: #aad;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.get-button {
+  padding: 12px 20px;
+  background: #3c5b8e;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-weight: bold;
+}
+
+.get-button:hover {
+  background: #4a6fa5;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1.2rem;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 25px;
+}
+
+.close-button:hover {
+  color: white;
+}
