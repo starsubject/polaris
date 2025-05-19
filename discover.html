@@ -56,14 +56,12 @@
     const grid = document.getElementById("communityGrid");
 
     async function loadCommunities() {
-      const chatCollection = collection(db, "chats");
-      const communities = await getDocs(chatCollection);
+      const communitiesSnap = await getDocs(collection(db, "chats"));
 
-      for (const communityDoc of communities.docs) {
-        const communityId = communityDoc.id;
-        const channelsSnap = await getDocs(collection(db, "chats", communityId));
+      for (const community of communitiesSnap.docs) {
+        const communityId = community.id;
+        const channelsSnap = await getDocs(collection(db, "chats", communityId, "channels"));
 
-        // Show only if it has at least one channel
         if (!channelsSnap.empty) {
           const firstChannel = channelsSnap.docs[0].id;
 
@@ -79,7 +77,7 @@
                 </p>
               </div>
             </div>
-            <p>Channel count: ${channelsSnap.size}</p>
+            <p>Channels: ${channelsSnap.size}</p>
             <div class="tags">
               <span class="tag">Community</span>
               <span class="tag">Chat</span>
