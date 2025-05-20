@@ -1,1128 +1,280 @@
-/* --- 1. Root Variables, Basic Reset & Body Styles --- */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"); /* Added 700 for bolder headings */
 
-:root {
-  --primary-bg: #1a1a2e; /* Dark background */
-  --secondary-bg: #16213e; /* Slightly lighter dark for cards/elements */
-  --sidebar-bg: #0f3460; /* Even darker blue for sidebar */
-  --text-color: #e0e0e0; /* Light grey for general text */
-  --heading-color: #f0f0f0; /* Lighter grey for headings */
-  --accent-color-yellow: #fddb3a; /* Vibrant yellow */
-  --accent-color-white: #ffffff; /* Pure white */
-  --border-color: #0d1a2f; /* Dark border */
-  --tag-bg: #2d4c82; /* Tag background */
-  --tag-text: #b0c4de; /* Tag text color */
-  --button-bg: #e94560; /* Button background (reddish) */
-  --button-hover-bg: #b93b51; /* Button hover background */
-  --link-color: #406882; /* Link color */
-  --link-hover-color: #6998ab; /* Link hover color */
-  --success-color: #4CAF50; /* Green for success/OK buttons */
-  --success-hover-color: #45a049;
-}
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 
-/* Universal box-sizing for consistent layout */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
-body {
-  font-family: 'Poppins', sans-serif;
-  background-color: var(--primary-bg);
-  color: var(--text-color);
-  line-height: 1.6;
-  display: flex; /* Use flexbox for main content centering */
-  justify-content: center;
-  min-height: 100vh; /* Ensure body takes full viewport height */
-  padding: 20px; /* Padding around the entire container */
-  overflow-y: scroll; /* Allow scrolling for content overflow */
+html, body {
+  height: 100%;
+  background: #0a1d37;
+  color: #fff;
+  overflow: hidden;
 }
 
-/* --- 2. Container Layout --- */
 .container {
   display: flex;
-  width: 100%;
-  max-width: 1200px; /* Max width of the entire app container */
-  background-color: var(--primary-bg);
-  border-radius: 10px;
-  overflow: hidden; /* Important for inner elements not breaking border-radius */
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  height: 100vh;
+  padding: 16px;
+  gap: 16px;
+}
+å
+.sidebar {
+  width: 260px;
+  background: #151a2d;
+  padding: 24px 20px;
+  border-radius: 16px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ffffff20;
+  transition: width 0.4s ease;
 }
 
-/* --- 3. Sidebar (Left Navigation) --- */
-.sidebar {
-  width: 250px;
-  background-color: var(--sidebar-bg);
-  padding: 30px 20px;
-  display: flex;
-  flex-direction: column; /* Stack elements vertically */
-  color: var(--heading-color);
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-  border-right: 1px solid var(--border-color);
+.sidebar.collapsed {
+  width: 85px;
 }
 
 .sidebar h2 {
-  font-size: 2em;
-  margin-bottom: 40px;
-  text-align: center;
-  color: var(--accent-color-yellow);
-  text-shadow: 0 0 5px var(--accent-color-yellow), 0 0 10px var(--accent-color-yellow);
+  font-size: 1.5rem;
+  color: #00b0ff;
+  margin-bottom: 24px;
 }
 
 .sidebar nav ul {
   list-style: none;
-  flex-grow: 1; /* Pushes utility buttons to the bottom */
-}
-
-.sidebar nav ul li {
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .sidebar nav ul li a {
-  display: block;
-  padding: 12px 15px;
-  color: var(--text-color);
   text-decoration: none;
-  font-size: 1.1em;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-  border-radius: 5px;
+  color: #ccc;
+  font-weight: 500;
+  padding: 10px 14px;
+  border-radius: 10px;
+  transition: 0.3s;
+  display: block;
 }
 
 .sidebar nav ul li a:hover {
-  background-color: var(--link-hover-color);
-  color: var(--accent-color-white);
-  transform: translateX(5px);
-}
-
-.sidebar nav ul li a.active-nav-link {
-  background-color: var(--link-color);
-  color: var(--accent-color-white);
-  font-weight: bold;
+  color: #fff;
+  background: #3c5b8e40;
 }
 
 .sidebar .buttons {
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border-color);
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .sidebar .buttons button {
-  width: 100%;
-  padding: 12px 15px;
-  background-color: var(--button-bg);
-  color: var(--accent-color-white);
+  background: #3c5b8e;
+  color: #fff;
   border: none;
-  border-radius: 5px;
+  padding: 12px;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 0.95em;
-  font-weight: bold;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: background 0.3s;
 }
 
 .sidebar .buttons button:hover {
-  background-color: var(--button-hover-bg);
-  transform: translateY(-2px);
+  background: #4a6fa5;
 }
 
-/* --- 4. Main Content Area --- */
 .main-content {
-  flex-grow: 1; /* Takes up remaining space */
-  padding: 30px 40px;
-  background-color: var(--primary-bg);
-  display: flex; /* Enable flex for vertical stacking of sections */
-  flex-direction: column;
+  flex: 1;
+  background: #1f2b45;
+  padding: 40px;
+  border-radius: 16px;
+  overflow-y: auto;
+  border: 1px solid #ffffff20;
 }
 
-.main-content h1 {
-  font-size: 2.8em;
-  margin-bottom: 30px;
-  text-align: center;
-  font-weight: 700;
-  color: var(--heading-color); /* Default for H1 */
+h1 {
+  color: #00b0ff;
+  margin-bottom: 24px;
 }
 
-/* Rainbow Text Effect (specific to index.html's H1) */
+.buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.buttons button {
+  background: #3c5b8e;
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.buttons button:hover {
+  background: #4a6fa5;
+}
+
+hr {
+  height: 1px;
+  border: none;
+  background: #3c5b8e;
+  margin: 30px 0;
+}
+
+.footer-note {
+  font-size: 0.9rem;
+  color: #aaa;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+.main-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background: #00b0ff;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.main-content:hover::-webkit-scrollbar-thumb {
+  opacity: 1;
+}
+
 .rainbow-text-yellowwhite {
-  background: linear-gradient(to right, var(--accent-color-yellow), var(--accent-color-white), var(--accent-color-yellow));
-  background-clip: text;
+  background: linear-gradient(270deg, yellow, white, yellow);
+  background-size: 400% 400%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: glow 1.5s infinite alternate;
+  animation: flow 5s linear infinite;
 }
 
-@keyframes glow {
-  from { text-shadow: 0 0 5px var(--accent-color-yellow); }
-  to { text-shadow: 0 0 15px var(--accent-color-yellow), 0 0 25px var(--accent-color-white); }
+@keyframes flow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
 }
 
-.main-content h2 {
-  font-size: 1.8em;
-  color: var(--heading-color);
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 10px;
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
 }
 
-/* App Card (General Card Style) */
+.modal-backdrop.show {
+  display: flex;
+  animation: fadeIn 0.3s ease;
+}
+
 .app-card {
-  background-color: var(--secondary-bg);
-  border-radius: 10px;
-  padding: 25px;
-  margin-bottom: 40px; /* Space between cards/sections */
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
-  border: 1px solid var(--border-color);
+  background: #202c45;
+  border-radius: 20px;
+  padding: 30px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+  animation: popIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
 .app-header {
   display: flex;
   align-items: center;
+  gap: 15px;
   margin-bottom: 15px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 15px;
 }
 
 .app-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 10px;
-  margin-right: 15px;
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
   object-fit: cover;
-  border: 2px solid var(--accent-color-yellow);
-}
-
-.app-header h2 {
-  font-size: 1.8em;
-  color: var(--heading-color);
-  margin: 0;
-  border: none; /* Override general h2 border */
-  padding: 0; /* Override general h2 padding */
-}
-
-.app-header p {
-  color: #bbb;
-  font-size: 0.95em;
 }
 
 .creator-info {
   display: flex;
   align-items: center;
+  gap: 10px;
   margin-bottom: 15px;
-  color: var(--tag-text);
-  font-size: 0.9em;
 }
 
 .creator-pic {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  margin-right: 8px;
   object-fit: cover;
-  border: 1px solid var(--accent-color-yellow);
-}
-
-.app-card p {
-  margin-bottom: 15px;
-  color: var(--text-color);
 }
 
 .tags {
-  margin-top: 15px;
   display: flex;
-  flex-wrap: wrap;
   gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0 20px;
 }
 
 .tag {
-  background-color: var(--tag-bg);
-  color: var(--tag-text);
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.8em;
+  background: #334;
+  color: #aad;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
   font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
-/* Recent Updates List (index.html) */
-.main-content ul {
-  list-style: none;
-  padding-left: 0;
-  margin-bottom: 40px;
-}
-
-.main-content ul li {
-  background-color: var(--secondary-bg);
-  margin-bottom: 10px;
-  padding: 15px 20px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.main-content ul li:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-/* Horizontal Rule */
-hr {
-  border: none;
-  border-top: 1px solid var(--border-color);
-  margin: 40px 0;
-}
-
-/* Footer Note (for specific pages, e.g., index.html) */
-.footer-note {
-  text-align: center;
-  font-size: 0.9em;
-  color: #888;
-  padding-top: 20px;
-  border-top: 1px solid var(--border-color);
-}
-
-/* --- 5. Login/Registration Page Specific Styles (test.html) --- */
-.login-card {
-  background-color: var(--secondary-bg);
-  border-radius: 10px;
-  padding: 30px;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
-  border: 1px solid var(--border-color);
-  max-width: 400px;
-  margin: 40px auto; /* Center horizontally, add vertical margin */
-  text-align: center;
-}
-
-.login-card .form-group {
-  margin-bottom: 20px;
-  text-align: left;
-}
-
-.login-card label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-  color: var(--heading-color);
-}
-
-.login-card input[type="text"],
-.login-card input[type="password"] {
-  width: 100%;
-  padding: 12px 15px;
-  border: 1px solid var(--border-color);
-  border-radius: 5px;
-  background-color: #2a3a5c; /* Slightly different input background */
-  color: var(--text-color);
-  font-size: 1em;
-  outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.login-card input[type="text"]:focus,
-.login-card input[type="password"]:focus {
-  border-color: var(--accent-color-yellow);
-  box-shadow: 0 0 0 3px rgba(253, 219, 58, 0.3);
-}
-
-.login-buttons {
-  display: flex;
-  justify-content: space-around;
-  gap: 15px;
-  margin-top: 30px;
-}
-
-.login-buttons button {
-  flex: 1; /* Allow buttons to grow and take equal space */
+.get-button {
   padding: 12px 20px;
+  background: #3c5b8e;
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 1em;
+  transition: background 0.3s ease;
   font-weight: bold;
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-#loginBtn {
-  background-color: var(--button-bg);
-  color: var(--accent-color-white);
+.get-button:hover {
+  background: #4a6fa5;
 }
 
-#loginBtn:hover {
-  background-color: var(--button-hover-bg);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-}
-
-#registerBtn {
-  background-color: var(--tag-bg); /* Use tag background for register for variety */
-  color: var(--tag-text);
-}
-
-#registerBtn:hover {
-  background-color: #3b609c; /* Slightly darker hover for register */
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-}
-
-/* Adjustments for main content h1 on login page (remove rainbow effect) */
-.main-content.login-page h1 {
-  color: var(--heading-color);
+.close-button {
   background: none;
-  background-clip: unset;
-  -webkit-background-clip: unset;
-  -webkit-text-fill-color: unset;
-  animation: none;
-  text-shadow: none;
-}
-
-/* XP Bonus Section (test.html) */
-#xpBonusSection {
-  background-color: var(--secondary-bg); /* Use secondary bg for consistency */
-  border-radius: 10px;
-  padding: 30px;
-  text-align: center;
-  margin-top: 30px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-  border: 1px solid var(--border-color);
-}
-
-#xpBonusSection h2 {
-  color: var(--accent-color-yellow); /* Yellow for the bonus heading */
-  margin-bottom: 15px;
-  font-size: 1.8em;
-  border-bottom: none; /* Remove border specific to this H2 */
-  padding-bottom: 0;
-}
-
-#xpBonusMessage {
-  color: var(--text-color);
-  font-size: 1.1em;
-  margin-bottom: 20px;
-}
-
-#claimXpBtn {
-  background-color: var(--success-color); /* Green button */
-  color: var(--accent-color-white);
   border: none;
-  padding: 12px 25px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1em;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
-
-#claimXpBtn:hover:not(:disabled) {
-  background-color: var(--success-hover-color);
-}
-
-#claimXpBtn.disabled-button {
-  background-color: #6c757d; /* Gray for disabled */
-  cursor: not-allowed;
-  opacity: 0.7;
-  box-shadow: none; /* No shadow when disabled */
-}
-
-/* --- 6. Discover Spaces Page (discover.html) --- */
-.space-category {
-  margin-bottom: 50px;
-}
-
-.space-category h2 {
-  font-size: 1.6em;
-  color: var(--accent-color-yellow);
-  border-bottom: 2px solid var(--accent-color-yellow);
-  padding-bottom: 10px;
-  margin-bottom: 25px;
-  text-align: left;
-}
-
-.space-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-}
-
-.space-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  height: 100%; /* Ensure cards in a grid have equal height if content varies */
-}
-
-.space-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
-}
-
-.space-card .app-header {
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-}
-
-.space-card .app-icon {
-  border-color: var(--link-color); /* Different border color for space icons */
-}
-
-.space-card p {
-  flex-grow: 1; /* Allow content to grow */
-  margin-bottom: 10px;
-  color: var(--text-color);
-}
-
-.space-card .tags {
-  margin-top: 10px;
-  margin-bottom: 15px;
-}
-
-.join-space-btn {
-  width: 100%;
-  padding: 12px 15px;
-  background-color: var(--accent-color-yellow);
-  color: var(--secondary-bg); /* Dark text on yellow */
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1em;
-  font-weight: bold;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  margin-top: auto; /* Push button to the bottom of the flex item */
-}
-
-.join-space-btn:hover {
-  background-color: #e6c530; /* Slightly darker yellow on hover */
-  transform: translateY(-2px);
-}
-
-/* --- 7. Settings Page (settings.html) --- */
-.settings-section {
-  background-color: var(--secondary-bg);
-  border-radius: 10px;
-  padding: 25px;
-  margin-bottom: 30px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  border: 1px solid var(--border-color);
-}
-
-.settings-section h2 {
-  font-size: 1.5em;
-  color: var(--heading-color);
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 10px;
-  text-align: left;
-}
-
-/* Reusing .form-group and input styles from login.html */
-.settings-section .form-group {
-  margin-bottom: 15px;
-}
-
-.settings-section input[type="text"],
-.settings-section input[type="password"] {
-  padding: 10px 15px; /* Slightly smaller padding for settings inputs */
-  font-size: 0.95em;
-}
-
-.settings-section input[disabled] {
-  background-color: #334a6d; /* Different background for disabled inputs */
-  color: #99aab5;
-  cursor: not-allowed;
-}
-
-.settings-buttons {
-  display: flex;
-  flex-wrap: wrap; /* Allow buttons to wrap */
-  gap: 10px; /* Space between buttons */
-  margin-top: 15px;
-}
-
-.save-settings-btn,
-.change-password-btn {
-  padding: 10px 20px;
-  background-color: var(--link-color); /* Blueish button */
-  color: var(--accent-color-white);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9em;
-  font-weight: bold;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-}
-
-.save-settings-btn:hover,
-.change-password-btn:hover {
-  background-color: var(--link-hover-color);
-  transform: translateY(-2px);
-}
-
-.logout-section {
-  text-align: center;
-  border-top: 1px solid var(--border-color);
-  padding-top: 25px;
-  margin-top: 40px;
-}
-
-.logout-section p {
-  margin-bottom: 20px;
-  color: #bbb;
-}
-
-.danger-button {
-  background-color: var(--button-bg); /* Red button for danger action */
-  color: var(--accent-color-white);
-  padding: 12px 25px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1.1em;
-  font-weight: bold;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.danger-button:hover {
-  background-color: var(--button-hover-bg);
-  transform: translateY(-2px);
-}
-
-/* --- 8. Chat Page (chat.html) --- */
-.chat-container {
-  display: flex;
-  height: 100%; /* Ensure chat container takes full height of main-content */
-  flex-grow: 1; /* Allow it to fill available space */
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-  background-color: var(--secondary-bg);
-}
-
-.chat-sidebar {
-  width: 200px;
-  background-color: var(--sidebar-bg); /* Same as main sidebar */
-  padding: 20px;
-  border-right: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-}
-
-.chat-sidebar h3 {
-  color: var(--accent-color-yellow);
-  margin-bottom: 20px;
-  font-size: 1.3em;
-  text-align: center;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 10px;
-}
-
-.channel-list {
-  list-style: none;
-  flex-grow: 1;
-  overflow-y: auto; /* Scrollable channel list */
-}
-
-.channel-list li {
-  margin-bottom: 8px;
-}
-
-.channel-list li a {
-  display: block;
-  padding: 8px 12px;
-  color: var(--text-color);
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.channel-list li a:hover {
-  background-color: rgba(64, 104, 130, 0.5); /* Lighter hover for channels */
-  color: var(--accent-color-white);
-}
-
-.channel-list li a.active-channel-link {
-  background-color: var(--link-color);
-  color: var(--accent-color-white);
-  font-weight: bold;
-}
-
-.chat-main {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--primary-bg); /* Chat background */
-}
-
-.chat-header {
-  background-color: var(--secondary-bg);
-  padding: 15px 20px;
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.chat-header h3 {
-  color: var(--heading-color);
-  font-size: 1.4em;
-  margin: 0;
-}
-
-.chat-username {
-  color: var(--accent-color-yellow);
-  font-weight: bold;
-}
-
-.messages-area {
-  flex-grow: 1;
-  padding: 20px;
-  overflow-y: auto; /* Scrollable messages */
-  display: flex;
-  flex-direction: column; /* Stack messages vertically */
-}
-
-.message-item {
-  background-color: var(--secondary-bg);
-  border-radius: 8px;
-  padding: 10px 15px;
-  margin-bottom: 10px;
-  word-wrap: break-word;
-  max-width: 95%;
-  align-self: flex-start; /* Default alignment */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-/* Styles for messages sent by the current user */
-.message-item.sent-by-me {
-    background-color: var(--link-color); /* A distinct color for user's own messages */
-    align-self: flex-end; /* Align to the right */
-}
-
-
-.message-sender {
-  font-weight: bold;
-  color: var(--accent-color-yellow); /* Yellow for sender names */
-}
-
-.message-time {
-  font-size: 0.8em;
-  color: #888;
-  margin-left: 5px;
-}
-
-.message-content {
-  color: var(--text-color);
-}
-
-.chat-input-area {
-  padding: 15px 20px;
-  background-color: var(--secondary-bg);
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  gap: 10px;
-}
-
-.chat-input-area input[type="text"] {
-  flex-grow: 1;
-  padding: 10px 15px;
-  border: 1px solid var(--border-color);
-  border-radius: 5px;
-  background-color: #2a3a5c;
-  color: var(--text-color);
-  font-size: 1em;
-  outline: none;
-}
-
-.chat-input-area input[type="text"]:focus {
-  border-color: var(--accent-color-yellow);
-  box-shadow: 0 0 0 3px rgba(253, 219, 58, 0.3);
-}
-
-.chat-input-area button {
-  padding: 10px 20px;
-  background-color: var(--success-color); /* Green send button */
-  color: var(--accent-color-white);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1em;
-  font-weight: bold;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-}
-
-.chat-input-area button:hover {
-  background-color: var(--success-hover-color);
-  transform: translateY(-2px);
-}
-
-
-/* --- 9. Common Header and Footer (Dynamically Injected) --- */
-/* These styles assume `script.js` injects the header/footer outside the .container */
-.main-header {
-  background-color: var(--secondary-bg); /* Darker than primary for header */
-  color: var(--accent-color-white);
-  padding: 15px 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
-  position: sticky; /* Make header sticky */
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 999; /* Ensure it's above most content */
-  border-bottom: 1px solid var(--border-color);
-}
-
-.header-logo {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: var(--accent-color-yellow); /* Yellow Polaris logo */
-  text-decoration: none;
-  text-shadow: 0 0 5px rgba(253, 219, 58, 0.5); /* Subtle glow */
-}
-
-.header-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-}
-
-.header-nav li {
-  margin-left: 25px;
-}
-
-.header-nav a {
-  color: var(--text-color);
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
-}
-
-.header-nav a:hover,
-.header-nav a.active-nav-link {
-  color: var(--accent-color-yellow); /* Highlight active/hovered links */
-}
-
-.header-button {
-  background-color: var(--success-color); /* Green for "New: Moderator rounds" */
-  color: var(--accent-color-white);
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-}
-
-.header-button:hover {
-  background-color: var(--success-hover-color);
-  transform: translateY(-2px);
-}
-
-.main-footer {
-  background-color: var(--secondary-bg);
   color: #aaa;
-  padding: 20px 30px;
-  text-align: center;
-  margin-top: 40px;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.4);
-  border-top: 1px solid var(--border-color);
+  font-size: 1.2rem;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 25px;
 }
 
-.footer-links a {
-  color: var(--link-color);
-  text-decoration: none;
-  margin: 0 10px;
-  font-size: 0.9rem;
-  transition: color 0.3s ease, text-decoration 0.3s ease;
-}
-
-.footer-links a:hover {
-  color: var(--link-hover-color);
-  text-decoration: underline;
-}
-
-
-/* --- 10. Custom Popup Styles --- */
-#custom-popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Dark semi-transparent overlay */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Ensure it's on top */
-    backdrop-filter: blur(5px); /* Visual blur effect */
-    -webkit-backdrop-filter: blur(5px); /* Safari support */
-}
-
-#custom-popup-box {
-    background-color: var(--secondary-bg); /* Use a consistent background */
-    border-radius: 10px;
-    padding: 30px;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6); /* Stronger shadow for pop-out effect */
-    text-align: center;
-    color: var(--text-color);
-    border: 1px solid var(--border-color); /* Subtle border */
-    animation: fadeInScale 0.3s ease-out;
-}
-
-#custom-popup-title {
-    color: var(--accent-color-yellow); /* Yellow for popup title */
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.6em;
-    font-weight: 700;
-}
-
-#custom-popup-message {
-    margin-bottom: 25px;
-    line-height: 1.6;
-    font-size: 1.1em;
-    color: var(--text-color);
-}
-
-#custom-popup-button {
-    background-color: var(--success-color); /* Green OK button */
-    color: var(--accent-color-white);
-    border: none;
-    padding: 12px 30px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.1em;
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-#custom-popup-button:hover {
-    background-color: var(--success-hover-color);
-    transform: translateY(-2px);
-}
-
-/* Keyframe for popup animation */
-@keyframes fadeInScale {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* --- 11. Responsive Design --- */
-@media (max-width: 900px) {
-  body {
-    padding: 15px;
-  }
-
-  .container {
-    flex-direction: column;
-    max-width: 700px; /* Adjust max-width for stacked layout */
-    box-shadow: none; /* Remove container shadow when stacked for cleaner look */
-  }
-
-  .sidebar {
-    width: 100%;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
-    border-radius: 10px 10px 0 0; /* Rounded top corners */
-  }
-
-  .sidebar h2 {
-    margin-bottom: 20px;
-  }
-
-  .sidebar nav ul {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .sidebar nav ul li {
-    margin-bottom: 0;
-  }
-
-  .sidebar nav ul li a {
-    padding: 10px 15px;
-    font-size: 1em;
-  }
-
-  .sidebar .buttons {
-    margin-top: 10px;
-    padding-top: 10px;
-  }
-
-  .main-content {
-    padding: 20px;
-    border-radius: 0 0 10px 10px; /* Rounded bottom corners */
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4); /* Add shadow to main content */
-  }
-
-  .main-content h1 {
-    font-size: 2.2em;
-    margin-bottom: 20px;
-  }
-
-  .app-card {
-    padding: 20px;
-    margin-bottom: 30px;
-  }
-
-  .app-icon {
-    width: 50px;
-    height: 50px;
-  }
-
-  .login-card {
-    margin: 20px auto;
-  }
-
-  .login-buttons {
-    flex-direction: column; /* Stack buttons vertically on small screens */
-  }
-
-  .login-buttons button {
-    width: 100%;
-    margin-bottom: 10px; /* Space between stacked buttons */
-  }
-
-  /* Discover page responsive grid */
-  .space-grid {
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjust min-width for space cards */
-      gap: 20px;
-  }
-
-  /* Chat page responsive layout */
-  .chat-container {
-      flex-direction: column;
-      height: auto; /* Allow height to adjust */
-  }
-
-  .chat-sidebar {
-      width: 100%;
-      border-right: none;
-      border-bottom: 1px solid var(--border-color);
-  }
-
-  .chat-main {
-      min-height: 400px; /* Ensure chat main has a minimum height on smaller screens */
-  }
-
-  /* Header adjustments for smaller screens */
-  .main-header {
-    flex-direction: column;
-    padding: 15px 20px;
-  }
-
-  .header-nav ul {
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 15px;
-    gap: 10px;
-  }
-
-  .header-nav li {
-    margin-left: 0;
-  }
-
-  .header-button {
-    margin-top: 15px;
-    width: 100%;
-    text-align: center;
-  }
-}
-
-@media (max-width: 500px) {
-  body {
-    padding: 10px;
-  }
-
-  .main-content {
-    padding: 15px;
-  }
-
-  .main-content h1 {
-    font-size: 1.8em;
-  }
-
-  .main-content h2 {
-    font-size: 1.5em;
-  }
-
-  .app-header h2 {
-    font-size: 1.5em;
-  }
-
-  .app-header p {
-    font-size: 0.85em;
-  }
-
-  .sidebar nav ul {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .login-card {
-    padding: 15px;
-  }
-
-  /* Settings page buttons stack */
-  .settings-buttons {
-      flex-direction: column;
-  }
-  .save-settings-btn,
-  .change-password-btn {
-      width: 100%;
-      margin-right: 0;
-      margin-bottom: 10px;
-  }
-  .danger-button {
-      width: 100%;
-  }
-
-  /* Chat page adjustments for very small screens */
-  .chat-input-area {
-      flex-direction: column;
-      gap: 5px;
-  }
-  .chat-input-area button {
-      width: 100%;
-  }
-
-  #custom-popup-box {
-      padding: 20px;
-      max-width: 300px;
-  }
-  #custom-popup-title {
-      font-size: 1.4em;
-  }
-  #custom-popup-message {
-      font-size: 1em;
-  }
-  #custom-popup-button {
-      padding: 10px 20px;
-      font-size: 1em;
-  }
+.close-button:hover {
+  color: white;
 }
