@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Polaris</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Polaris</h2>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="login.html" class="active-nav-link">Login</a></li>
+          <li><a href="settings.html">Logout</a></li>
+          <li><a href="discover.html">Discover Spaces</a></li>
+        </ul>
+        <div class="buttons">
+          <button id="moderatorRoundsButton">New: Moderator rounds are open!</button>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Login to Polaris</h1>
+      <div class="login-card">
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" id="username" placeholder="Enter your username" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" id="password" placeholder="Enter your password" />
+        </div>
+        <div class="login-buttons">
+          <button id="loginBtn">Login</button>
+          <button id="registerBtn">Register</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword
+  } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
+
+  const app = initializeApp({
+    apiKey: "AIzaSyDZxd9oql0a8y8fXe-z_6qfxRAqGQUsFIg",
+    authDomain: "polaris-a273e.firebaseapp.com",
+    projectId: "polaris-a273e",
+    storageBucket: "polaris-a273e.firebasestorage.app",
+    messagingSenderId: "677589636568",
+    appId: "1:677589636568:web:bf1c0dbaa9ed1e337b4ead"
+  });
+
+  const auth = getAuth(app);
+  const customDomain = "@myapp.com";
+
+  const $ = id => document.getElementById(id);
+  const usernameEl = $("username");
+  const passwordEl = $("password");
+  const loginBtn   = $("loginBtn");
+  const registerBtn= $("registerBtn");
+
+  loginBtn.onclick = async () => {
+    const u = usernameEl.value.trim();
+    const p = passwordEl.value;
+    if (!u || !p) return alert("Missing fields.");
+    try {
+      await signInWithEmailAndPassword(auth, u + customDomain, p);
+      alert("Logged in!");
+      location.href = "index.html";
+    } catch (e) {
+      alert("Login failed: " + e.code);
+      console.error(e.code, e.message);
+    }
+  };
+
+  registerBtn.onclick = async () => {
+    const u = usernameEl.value.trim();
+    const p = passwordEl.value;
+    if (!u || !p) return alert("Missing fields.");
+    try {
+      await createUserWithEmailAndPassword(auth, u + customDomain, p);
+      alert("Account created!");
+      location.href = "index.html";
+    } catch (e) {
+      alert("Register failed: " + e.code);
+      console.error(e.code, e.message);
+    }
+  };
+</script>
+</body>
+</html>
