@@ -8,94 +8,12 @@
 </head>
 <body>
   <div class="container">
-    <aside class="sidebar">
-      <h2>Polaris</h2>
-      <nav>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="login.html">Login</a></li>
-          <li><a href="settings.html">Logout</a></li>
-          <li><a href="discover.html">Discover Spaces</a></li>
-        </ul>
-        <div class="buttons">
-          <button id="moderatorRoundsButton">New: Moderator rounds are open!</button>
-        </div>
-      </nav>
-    </aside>
-
     <main class="main-content">
       <h1>Discover Educational Chat Spaces</h1>
       <div id="communityGrid" class="space-grid"></div>
-      <hr />
-      <div class="footer-note">
-        <p>Made by 3 passionate people.</p>
-      </div>
     </main>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs
-    } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDZxd9oql0a8y8fXe-z_6qfxRAqGQUsFIg",
-      authDomain: "polaris-a273e.firebaseapp.com",
-      projectId: "polaris-a273e",
-      storageBucket: "polaris-a273e.firebasestorage.app",
-      messagingSenderId: "677589636568",
-      appId: "1:677589636568:web:bf1c0dbaa9ed1e337b4ead"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const grid = document.getElementById("communityGrid");
-
-    async function loadCommunities() {
-      const communitiesSnap = await getDocs(collection(db, "chats"));
-
-      for (const community of communitiesSnap.docs) {
-        const communityId = community.id;
-        const channelsSnap = await getDocs(collection(db, "chats", communityId, "channels"));
-
-        if (!channelsSnap.empty) {
-          const firstChannel = channelsSnap.docs[0].id;
-
-          const card = document.createElement("div");
-          card.className = "app-card space-card";
-          card.innerHTML = `
-            <div class="app-header">
-              <img src="https://via.placeholder.com/60/3c5b8e/ffffff?text=${communityId.charAt(0).toUpperCase()}" alt="${communityId}" class="app-icon">
-              <div>
-                <h2 style="margin: 0;">${communityId}</h2>
-                <p style="margin: 0; font-size: 0.9rem; color: #ccc;">
-                  A growing educational space for curious minds.
-                </p>
-              </div>
-            </div>
-            <p>Channels: ${channelsSnap.size}</p>
-            <div class="tags">
-              <span class="tag">Community</span>
-              <span class="tag">Chat</span>
-              <span class="tag">Explore</span>
-            </div>
-            <button class="join-space-btn" onclick="location.href='chat.html?community=${communityId}&channel=${firstChannel}'">Join Space</button>
-          `;
-          grid.appendChild(card);
-        }
-      }
-    }
-
-    loadCommunities();
-
-    document.getElementById("moderatorRoundsButton").addEventListener("click", () => {
-      alert("Moderator rounds are indeed open! Click OK to learn more.");
-      window.location.href = "new.html";
-    });
-  </script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>

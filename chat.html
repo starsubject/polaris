@@ -11,7 +11,7 @@
     <aside class="sidebar">
       <h2>Polaris</h2>
       <div>
-        <p><strong>User:</strong> <span id="username">Loading...</span></p>
+        <p><strong>User:</strong> <span id="chatUsername">Loading...</span></p>
         <hr style="margin:20px 0;">
         <p style="margin-bottom:10px;">Channels</p>
         <nav><ul id="channelList"></ul></nav>
@@ -30,117 +30,6 @@
     </main>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
-    import {
-      getFirestore,
-      doc,
-      getDoc,
-      updateDoc,
-      arrayUnion,
-      collection,
-      query,
-      orderBy,
-      onSnapshot,
-      addDoc,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
-
-    const app = initializeApp({
-      apiKey: "AIzaSyDZxd9oql0a8y8fXe-z_6qfxRAqGQUsFIg",
-      authDomain: "polaris-a273e.firebaseapp.com",
-      projectId: "polaris-a273e",
-      storageBucket: "polaris-a273e.firebasestorage.app",
-      messagingSenderId: "677589636568",
-      appId: "1:677589636568:web:bf1c0dbaa9ed1e337b4ead"
-    });
-    const db = getFirestore(app), auth = getAuth(app);
-
-    const p          = new URLSearchParams(location.search);
-    const community  = (p.get("community")||"").toLowerCase();
-    const reqChannel = (p.get("channel")  ||"").toLowerCase();
-
-    const userEl = document.getElementById("username");
-    const listEl = document.getElementById("channelList");
-    const msgsEl = document.getElementById("messages");
-    const titleEl= document.getElementById("chatTitle");
-    const input  = document.getElementById("messageInput");
-    const sendBtn= document.getElementById("sendBtn");
-
-    onAuthStateChanged(auth, async user => {
-      if (!user) return location.href = "test.html";
-      userEl.innerText = user.email.split("@")[0];
-
-      if (!community) {
-        titleEl.innerText = "No community selected.";
-        msgsEl.innerHTML = `<p>Select a community.</p>
-          <button onclick="location.href='discover.html'">Discover</button>`;
-        return;
-      }
-
-      const ref = doc(db,"chats",community);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) {
-        titleEl.innerText = `Community "${community}" not found.`;
-        msgsEl.innerHTML = `<p>Doesn’t exist.</p>
-          <button onclick="location.href='discover.html'">Discover</button>`;
-        return;
-      }
-
-      // ensure this channel is recorded
-      await updateDoc(ref, { channels: arrayUnion(reqChannel) });
-
-      const updated = await getDoc(ref);
-      const data = updated.data();
-      const channels = Array.isArray(data.channels)
-        ? data.channels.map(c=>c.toLowerCase())
-        : [];
-
-      if (!channels.length) {
-        titleEl.innerText = `${community} (no channels)`;
-        msgsEl.innerHTML = `<p>No channels.</p>`;
-        return;
-      }
-
-      const channel = channels.includes(reqChannel) ? reqChannel : channels[0];
-
-      listEl.innerHTML = "";
-      channels.forEach(ch => {
-        const li = document.createElement("li");
-        const a  = document.createElement("a");
-        a.href        = `chat.html?community=${community}&channel=${ch}`;
-        a.textContent = `# ${ch}`;
-        li.appendChild(a);
-        listEl.appendChild(li);
-      });
-
-      titleEl.innerText = `#${channel} in ${community}`;
-      const q = query(collection(db,"chats",community,channel), orderBy("timestamp","asc"));
-      onSnapshot(q, s => {
-        msgsEl.innerHTML = "";
-        s.forEach(d => {
-          const m = d.data();
-          const t = m.timestamp?.toDate().toLocaleTimeString()||"🕒";
-          const div = document.createElement("div");
-          div.innerHTML = `<strong>${m.sender}</strong> [${t}]: ${m.content}`;
-          msgsEl.appendChild(div);
-        });
-        msgsEl.scrollTop = msgsEl.scrollHeight;
-      });
-
-      sendBtn.onclick = async () => {
-        const txt = input.value.trim();
-        if (!txt) return;
-        await addDoc(collection(db,"chats",community,channel),{
-          content: txt,
-          sender: userEl.innerText,
-          timestamp: serverTimestamp()
-        });
-        input.value = "";
-      };
-      input.onkeydown = e => { if(e.key==="Enter") sendBtn.click(); };
-    });
-  </script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
