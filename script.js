@@ -24,6 +24,61 @@ const customDomain = "@polarisapp.com"; // Consider a more descriptive domain fo
 const DAILY_XP_AMOUNT = 50;
 
 
+// --- Popup Functions ---
+let popupOverlay;
+let popupBox;
+let popupTitle;
+let popupMessage;
+let popupButton;
+
+function initializePopupElements() {
+    if (!popupOverlay) {
+        popupOverlay = document.createElement('div');
+        popupOverlay.id = 'custom-popup-overlay';
+        popupOverlay.style.display = 'none'; // Hidden by default
+        document.body.appendChild(popupOverlay);
+
+        popupBox = document.createElement('div');
+        popupBox.id = 'custom-popup-box';
+        popupOverlay.appendChild(popupBox);
+
+        popupTitle = document.createElement('h3');
+        popupTitle.id = 'custom-popup-title';
+        popupBox.appendChild(popupTitle);
+
+        popupMessage = document.createElement('p');
+        popupMessage.id = 'custom-popup-message';
+        popupBox.appendChild(popupMessage);
+
+        popupButton = document.createElement('button');
+        popupButton.id = 'custom-popup-button';
+        popupButton.textContent = 'OK';
+        popupBox.appendChild(popupButton);
+
+        // Event listener for closing the popup
+        popupButton.addEventListener('click', hidePopup);
+        popupOverlay.addEventListener('click', (event) => {
+            if (event.target === popupOverlay) { // Close if clicked outside the box
+                hidePopup();
+            }
+        });
+    }
+}
+
+function showPopup(message, title = "Polaris Notification") {
+    initializePopupElements(); // Ensure elements are ready
+    popupTitle.textContent = title;
+    popupMessage.textContent = message;
+    popupOverlay.style.display = 'flex'; // Show the popup
+}
+
+function hidePopup() {
+    if (popupOverlay) {
+        popupOverlay.style.display = 'none'; // Hide the popup
+    }
+}
+
+
 // Helper function to update user XP in Firestore
 async function updateUserXP(userId, xpAmount) {
     if (!userId) {
@@ -92,12 +147,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.insertAdjacentHTML('afterbegin', commonHeaderHTML);
     document.body.insertAdjacentHTML('beforeend', commonFooterHTML);
 
+    initializePopupElements(); // Initialize popup elements after injecting header/footer
+
 
     // Re-attach listener for the moderator button, now that it's in the header
     const moderatorRoundsButton = document.getElementById('moderatorRoundsButtonHeader');
     if (moderatorRoundsButton) {
         moderatorRoundsButton.addEventListener('click', () => {
-            alert('Moderator rounds are indeed open! Click OK to learn more.');
+            showPopup('Moderator rounds are indeed open! Click OK to learn more.', 'Important Announcement');
             window.location.href = 'new.html'; // Redirect to the 'new.html' page
         });
     }
@@ -149,7 +206,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to check and display XP bonus status
     async function updateXpBonusStatus(user) {
-        if (!xpBonusSection || !claimXpBtn || !xpBonusMessage || !user) return; // Only run if elements exist and user is logged in
+        if (!xpBonusSection || !claimXpBtn || !xpBonusMessage || !user) {
+            // If user is not logged in, hide the XP section
+            if (xpBonusSection) xpBonusSection.style.display = 'none';
+            return;
+        }
+
+        // If user is logged in, ensure XP section is visible
+        if (xpBonusSection) xpBonusSection.style.display = 'block';
+
 
         const userRef = doc(db, "users", user.uid);
         const userDoc = await getDoc(userRef);
@@ -177,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
         claimXpBtn.addEventListener('click', async () => {
             const user = auth.currentUser;
             if (!user) {
-                alert('You must be logged in to claim XP!');
+                showPopup('You must be logged in to claim XP!', 'Login Required');
                 return;
             }
 
@@ -188,16 +253,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const twentyFourHours = 24 * 60 * 60 * 1000;
 
             if (lastClaimTime && (now - lastClaimTime < twentyFourHours)) {
-                alert("You've already claimed your daily XP! Please wait.");
+                showPopup("You've already claimed your daily XP! Please wait.", 'Daily XP Bonus');
                 return;
             }
 
             try {
                 await updateUserXP(user.uid, DAILY_XP_AMOUNT);
-                alert(`You claimed ${DAILY_XP_AMOUNT} XP!`);
+                showPopup(`You claimed ${DAILY_XP_AMOUNT} XP!`, 'Daily XP Claimed');
                 updateXpBonusStatus(user); // Update status immediately
             } catch (error) {
-                alert(`Failed to claim XP: ${error.message}`);
+                showPopup(`Failed to claim XP: ${error.message}`, 'XP Claim Error');
                 console.error("XP Claim Error:", error);
             }
         });
@@ -217,13 +282,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = passwordInput.value;
 
             if (!username || !password) {
-                return alert("Both fields are lit, so fill them in!");
+                return showPopup("Both fields are lit, so fill them in!", "Missing Information");
             }
 
             const email = username + customDomain;
             createUserWithEmailAndPassword(auth, email, password)
                 .then(async (userCredential) => { // Made async to await profile update
-                    alert("User registered successfully!");
+                    showPopup("User registered successfully!", "Registration Success");
                     if (userCredential.user) {
                          await userCredential.user.updateProfile({ displayName: username }); // Set display name immediately
                          // Also create a user document in Firestore for XP tracking
@@ -239,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = 'index.html'; // Redirect to home after register
                 })
                 .catch((error) => {
-                    alert(`Registration Error: ${error.message}`);
+                    showPopup(`Registration Error: ${error.message}`, "Registration Failed");
                 });
         });
     }
@@ -258,17 +323,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = passwordInput.value;
 
             if (!username || !password) {
-                return alert("Fill in both fields, fam.");
+                return showPopup("Fill in both fields, fam.", "Missing Information");
             }
 
             const email = username + customDomain;
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    alert("Login successful!");
+                    showPopup("Login successful!", "Login Success");
                     window.location.href = 'index.html';
                 })
                 .catch((error) => {
-                    alert(`Login Error: ${error.message}`);
+                    showPopup(`Login Error: ${error.message}`, "Login Failed");
                 });
         });
     }
@@ -290,22 +355,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (displayNameInput) displayNameInput.value = user.displayName || user.email.split('@')[0];
                 if (emailDisplayInput) emailDisplayInput.value = user.email;
             } else {
-                alert('You must be logged in to view settings.');
+                showPopup('You must be logged in to view settings.', 'Access Denied');
                 window.location.href = 'test.html'; // Redirect to new login page
             }
         }
 
         // Handle Daily XP bonus status on test.html if user is logged in
         if (window.location.pathname.endsWith('test.html')) {
-            if (user) {
-                updateXpBonusStatus(user);
-                // Set an interval to update the countdown
-                // Ensure this interval is cleared if the user navigates away or logs out,
-                // or consider a more robust state management if this becomes an issue.
-                setInterval(() => updateXpBonusStatus(user), 60 * 1000); // Update every minute
-            } else {
-                // If not logged in on test.html, ensure XP bonus section is hidden or disabled
-                if (xpBonusSection) xpBonusSection.style.display = 'none';
+            updateXpBonusStatus(user);
+            // Set an interval to update the countdown
+            // Ensure this interval is cleared if the user navigates away or logs out,
+            // or consider a more robust state management if this becomes an issue.
+            // For a single page, a simple interval is often fine, but be mindful in larger apps.
+            if (user) { // Only set interval if user is logged in
+                const xpInterval = setInterval(() => updateXpBonusStatus(user), 60 * 1000); // Update every minute
+                // Consider adding a cleanup mechanism for this interval on page unload or logout
+                // e.g., window.addEventListener('beforeunload', () => clearInterval(xpInterval));
+                // Or clear it in the logout function.
             }
         }
 
@@ -324,6 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const reqChannel = (p.get("channel")  ||"").toLowerCase();
 
             if (!user) {
+                showPopup('You must be logged in to access chat.', 'Access Denied');
                 location.href = "test.html"; // Redirect to login if not authenticated
                 return;
             }
@@ -413,6 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 input.onkeydown = e => { if(e.key==="Enter") sendBtn.click(); };
             }).catch(error => {
                 console.error("Error loading chat community:", error);
+                showPopup(`Error loading community: ${error.message}`, 'Chat Error');
                 titleEl.innerText = "Error loading community.";
                 msgsEl.innerHTML = `<p>An error occurred: ${error.message}</p>`;
             });
@@ -474,10 +542,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
             signOut(auth).then(() => {
-                alert('You have been logged out.');
+                showPopup('You have been logged out.', 'Logged Out');
                 window.location.href = 'test.html'; // Redirect to new login page
             }).catch((error) => {
-                alert(`Logout Error: ${error.message}`);
+                showPopup(`Logout Error: ${error.message}`, 'Logout Failed');
             });
         });
     }
@@ -490,12 +558,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 user.updateProfile({
                     displayName: newDisplayName
                 }).then(() => {
-                    alert('Profile updated successfully!');
+                    showPopup('Profile updated successfully!', 'Profile Update');
                 }).catch((error) => {
-                    alert(`Error updating profile: ${error.message}`);
+                    showPopup(`Error updating profile: ${error.message}`, 'Profile Update Failed');
                 });
             } else {
-                alert('No user logged in or display name field not found.');
+                showPopup('No user logged in or display name field not found.', 'Error');
             }
         });
     }
@@ -504,7 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
         changePasswordBtn.addEventListener('click', () => {
             const user = auth.currentUser;
             if (!user) {
-                alert('No user logged in.');
+                showPopup('No user logged in.', 'Error');
                 return;
             }
 
@@ -517,20 +585,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const confirmPassword = confirmPasswordInput.value;
 
             if (newPassword !== confirmPassword) {
-                alert('New passwords do not match!');
+                showPopup('New passwords do not match!', 'Password Mismatch');
                 return;
             }
             if (newPassword.length < 6) {
-                alert('Password must be at least 6 characters long.');
+                showPopup('Password must be at least 6 characters long.', 'Password Too Short');
                 return;
             }
 
             user.updatePassword(newPassword).then(() => {
-                alert('Password updated successfully!');
+                showPopup('Password updated successfully!', 'Password Change');
                 newPasswordInput.value = '';
                 confirmPasswordInput.value = '';
             }).catch((error) => {
-                alert(`Error changing password: ${error.message}. You may need to log in again if your session is old.`);
+                showPopup(`Error changing password: ${error.message}. You may need to log in again if your session is old.`, 'Password Change Failed');
             });
         });
     }
