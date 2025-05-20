@@ -2,7 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
 import { getFirestore, doc, getDoc, updateDoc, arrayUnion, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
-
+import { getDocs } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js"; // Added getDocs for discover page
 
 // Your Firebase Configuration
 const firebaseConfig = {
@@ -35,7 +35,7 @@ function initializePopupElements() {
     if (!popupOverlay) {
         popupOverlay = document.createElement('div');
         popupOverlay.id = 'custom-popup-overlay';
-        popupOverlay.style.display = 'none'; // Hidden by default
+        popupOverlay.classList.add('hidden'); // Start hidden
         document.body.appendChild(popupOverlay);
 
         popupBox = document.createElement('div');
@@ -69,12 +69,16 @@ function showPopup(message, title = "Polaris Notification") {
     initializePopupElements(); // Ensure elements are ready
     popupTitle.textContent = title;
     popupMessage.textContent = message;
-    popupOverlay.style.display = 'flex'; // Show the popup
+    // Use the 'show' class for animation
+    popupOverlay.classList.remove('hidden');
+    popupOverlay.classList.add('show');
 }
 
 function hidePopup() {
     if (popupOverlay) {
-        popupOverlay.style.display = 'none'; // Hide the popup
+        // Use the 'hidden' class for animation
+        popupOverlay.classList.remove('show');
+        popupOverlay.classList.add('hidden');
     }
 }
 
@@ -92,14 +96,15 @@ async function updateUserXP(userId, xpAmount) {
             const currentXP = userDoc.data().xp || 0;
             await updateDoc(userRef, {
                 xp: currentXP + xpAmount,
-                lastClaimedXP: Date.now() // Store last claim time in Firestore
+                // Store Date.now() as a number for easier comparison
+                lastClaimedXP: Date.now()
             });
             console.log(`User ${userId} XP updated to ${currentXP + xpAmount}`);
         } else {
             // If user document doesn't exist, create it
             await setDoc(userRef, {
                 xp: xpAmount,
-                lastClaimedXP: Date.now(),
+                lastClaimedXP: Date.now(), // Initialize last claimed time as a number
                 createdAt: serverTimestamp()
             });
             console.log(`New user ${userId} created with ${xpAmount} XP.`);
@@ -151,9 +156,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Re-attach listener for the moderator button, now that it's in the header
-    const moderatorRoundsButton = document.getElementById('moderatorRoundsButtonHeader');
-    if (moderatorRoundsButton) {
-        moderatorRoundsButton.addEventListener('click', () => {
+    const moderatorRroundsButton = document.getElementById('moderatorRoundsButtonHeader');
+    if (moderatorRroundsButton) {
+        moderatorRroundsButton.addEventListener('click', () => {
             showPopup('Moderator rounds are indeed open! Click OK to learn more.', 'Important Announcement');
             window.location.href = 'new.html'; // Redirect to the 'new.html' page
         });
@@ -206,19 +211,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to check and display XP bonus status
     async function updateXpBonusStatus(user) {
-        if (!xpBonusSection || !claimXpBtn || !xpBonusMessage || !user) {
+        if (!xpBonusSection || !claimXpBtn || !xpBonusMessage) {
+            // If the elements don't exist, we can't update status
+            return;
+        }
+
+        if (!user) {
             // If user is not logged in, hide the XP section
-            if (xpBonusSection) xpBonusSection.style.display = 'none';
+            xpBonusSection.style.display = 'none';
             return;
         }
 
         // If user is logged in, ensure XP section is visible
-        if (xpBonusSection) xpBonusSection.style.display = 'block';
-
+        xpBonusSection.style.display = 'block';
 
         const userRef = doc(db, "users", user.uid);
         const userDoc = await getDoc(userRef);
-        const lastClaimTime = userDoc.exists() ? userDoc.data().lastClaimedXP : 0;
+        // Ensure lastClaimedXP is treated as a number
+        const lastClaimTime = userDoc.exists() ? (userDoc.data().lastClaimedXP || 0) : 0;
 
         const now = Date.now();
         const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
@@ -228,12 +238,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const hours = Math.floor(timeLeft / (1000 * 60 * 60));
             const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
             xpBonusMessage.textContent = `Claim again in ${hours}h ${minutes}m.`;
-            claimXpBtn.disabled = true;
-            claimXpBtn.classList.add('disabled-button');
+            claimXpBtn.disabled = true; // Use disabled attribute directly
         } else {
             xpBonusMessage.textContent = `Claim your ${DAILY_XP_AMOUNT} XP bonus!`;
-            claimXpBtn.disabled = false;
-            claimXpBtn.classList.remove('disabled-button');
+            claimXpBtn.disabled = false; // Use disabled attribute directly
         }
     }
 
@@ -248,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const userRef = doc(db, "users", user.uid);
             const userDoc = await getDoc(userRef);
-            const lastClaimTime = userDoc.exists() ? userDoc.data().lastClaimedXP : 0;
+            const lastClaimTime = userDoc.exists() ? (userDoc.data().lastClaimedXP || 0) : 0;
             const now = Date.now();
             const twentyFourHours = 24 * 60 * 60 * 1000;
 
@@ -296,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
                              email: userCredential.user.email,
                              displayName: username,
                              xp: 0,
-                             lastClaimedXP: 0, // Initialize last claimed time
+                             lastClaimedXP: 0, // Initialize last claimed time as a number
                              createdAt: serverTimestamp()
                          });
                          console.log("Display name and user document set.");
@@ -347,6 +355,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmPasswordInput = document.getElementById('confirmPassword');
     const changePasswordBtn = document.querySelector('.change-password-btn');
 
+    let xpInterval; // Declare it here to be accessible within auth.onAuthStateChanged and logoutBtn
+
     // Listener for authentication state changes (useful for settings page and chat)
     auth.onAuthStateChanged((user) => {
         // Handle settings page specific user info display
@@ -362,16 +372,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Handle Daily XP bonus status on test.html if user is logged in
         if (window.location.pathname.endsWith('test.html')) {
-            updateXpBonusStatus(user);
-            // Set an interval to update the countdown
-            // Ensure this interval is cleared if the user navigates away or logs out,
-            // or consider a more robust state management if this becomes an issue.
-            // For a single page, a simple interval is often fine, but be mindful in larger apps.
-            if (user) { // Only set interval if user is logged in
-                const xpInterval = setInterval(() => updateXpBonusStatus(user), 60 * 1000); // Update every minute
-                // Consider adding a cleanup mechanism for this interval on page unload or logout
-                // e.g., window.addEventListener('beforeunload', () => clearInterval(xpInterval));
-                // Or clear it in the logout function.
+            if (xpInterval) { // Clear any existing interval
+                clearInterval(xpInterval);
+                xpInterval = null; // Reset it
+            }
+
+            if (user) {
+                updateXpBonusStatus(user);
+                xpInterval = setInterval(() => updateXpBonusStatus(user), 60 * 1000); // Update every minute
+            } else {
+                // User logged out on test.html, hide the XP section
+                if (xpBonusSection) xpBonusSection.style.display = 'none';
             }
         }
 
@@ -408,7 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
             getDoc(ref).then(async snap => {
                 if (!snap.exists()) {
                     titleEl.innerText = `Community "${community}" not found.`;
-                    msgsEl.innerHTML = `<p>Doesn’t exist.</p>
+                    msgsEl.innerHTML = `<p>Doesnâ€™t exist.</p>
                       <button onclick="location.href='discover.html'">Discover</button>`;
                     return;
                 }
@@ -544,6 +555,10 @@ document.addEventListener('DOMContentLoaded', () => {
             signOut(auth).then(() => {
                 showPopup('You have been logged out.', 'Logged Out');
                 window.location.href = 'test.html'; // Redirect to new login page
+                if (xpInterval) { // Clear interval on logout
+                    clearInterval(xpInterval);
+                    xpInterval = null;
+                }
             }).catch((error) => {
                 showPopup(`Logout Error: ${error.message}`, 'Logout Failed');
             });

@@ -659,3 +659,20 @@ hr {
       font-size: 1rem;
   }
 }
+/* Add this to your styles.css */
+.claim-button.disabled-button,
+#claimXpBtn.disabled-button { /* Ensure both general and specific ID are covered */
+  background: #6c757d; /* Gray color for disabled button */
+  cursor: not-allowed;
+  opacity: 0.7; /* Slightly dim it */
+  box-shadow: none; /* Remove shadow to indicate inactivity */
+  transform: none; /* Prevent hover transform */
+}
+
+/* Ensure hover styles don't override disabled state */
+.claim-button:hover:disabled,
+#claimXpBtn:hover:disabled {
+  background: #6c757d; /* Keep gray on hover when disabled */
+  cursor: not-allowed;
+  transform: none;
+}
