@@ -1,6 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"); /* Added 700 for bolder headings */
 
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
-
+/* --- Base Styles & Reset --- */
 * {
   margin: 0;
   padding: 0;
@@ -10,97 +10,115 @@
 
 html, body {
   height: 100%;
-  background: #0a1d37;
-  color: #fff;
-  overflow: hidden;
+  background: #0a1d37; /* Primary background color */
+  color: #fff; /* Default text color */
+/* Control overall body overflow */
 }
 
+/* --- Container Layout --- */
 .container {
   display: flex;
-  height: 100vh;
-  padding: 16px;
-  gap: 16px;
+  height: 100vh; /* Full viewport height */
+  padding: 16px; /* Padding around the container */
+  gap: 16px; /* Space between sidebar and main content */
 }
-å
+
+/* --- Sidebar --- */
 .sidebar {
   width: 260px;
-  background: #151a2d;
+  background: #151a2d; /* Sidebar background color */
   padding: 24px 20px;
   border-radius: 16px;
-  flex-shrink: 0;
+  flex-shrink: 0; /* Prevent sidebar from shrinking */
   display: flex;
   flex-direction: column;
-  border: 1px solid #ffffff20;
-  transition: width 0.4s ease;
+  border: 1px solid rgba(255, 255, 255, 0.125); /* Subtle white border */
+  transition: width 0.4s ease; /* Smooth collapse transition */
 }
 
 .sidebar.collapsed {
-  width: 85px;
+  width: 85px; /* Collapsed width */
 }
 
 .sidebar h2 {
   font-size: 1.5rem;
-  color: #00b0ff;
+  color: #00b0ff; /* Polaris title color */
   margin-bottom: 24px;
+  text-align: center; /* Center the title */
 }
 
 .sidebar nav ul {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 10px; /* Space between nav items */
+  flex-grow: 1; /* Allows nav to push buttons to bottom */
 }
 
 .sidebar nav ul li a {
   text-decoration: none;
-  color: #ccc;
+  color: #ccc; /* Nav link color */
   font-weight: 500;
   padding: 10px 14px;
   border-radius: 10px;
   transition: 0.3s;
-  display: block;
+  display: flex; /* Use flex for icon and text alignment */
+  align-items: center;
+  gap: 10px; /* Space between icon and text */
 }
 
 .sidebar nav ul li a:hover {
   color: #fff;
-  background: #3c5b8e40;
+  background: rgba(60, 91, 142, 0.25); /* Subtle hover background */
+}
+
+.sidebar nav ul li a.active-nav-link {
+    color: #fff;
+    background: #3c5b8e; /* Active link highlight */
+    font-weight: 600;
 }
 
 .sidebar .buttons {
-  margin-top: auto;
+  margin-top: auto; /* Push buttons to the bottom */
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
 .sidebar .buttons button {
-  background: #3c5b8e;
+  background: #3c5b8e; /* Button background */
   color: #fff;
   border: none;
   padding: 12px;
   border-radius: 10px;
   cursor: pointer;
   transition: background 0.3s;
+  font-weight: 600;
 }
 
 .sidebar .buttons button:hover {
-  background: #4a6fa5;
+  background: #4a6fa5; /* Button hover background */
 }
 
+/* --- Main Content Area --- */
 .main-content {
-  flex: 1;
-  background: #1f2b45;
+  flex: 1; /* Takes remaining space */
+  background: #1f2b45; /* Main content background */
   padding: 40px;
   border-radius: 16px;
-  overflow-y: auto;
-  border: 1px solid #ffffff20;
+  overflow-y: auto; /* Enable scrolling for content overflow */
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  display: flex; /* Use flex to stack internal content */
+  flex-direction: column;
 }
 
 h1 {
-  color: #00b0ff;
+  color: #00b0ff; /* Main heading color */
   margin-bottom: 24px;
+  text-align: center; /* Center main headings */
 }
 
+/* Common button styles (used outside sidebar) */
 .buttons {
   display: flex;
   gap: 16px;
@@ -117,6 +135,7 @@ h1 {
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.3s;
+  font-weight: 600;
 }
 
 .buttons button:hover {
@@ -126,7 +145,7 @@ h1 {
 hr {
   height: 1px;
   border: none;
-  background: #3c5b8e;
+  background: #3c5b8e; /* Divider color */
   margin: 30px 0;
 }
 
@@ -135,27 +154,31 @@ hr {
   color: #aaa;
   max-width: 600px;
   line-height: 1.6;
+  text-align: center; /* Center footer note */
+  margin: 0 auto; /* Center horizontally */
 }
 
+/* Custom Scrollbar Styles */
 .main-content::-webkit-scrollbar {
   width: 8px;
 }
 
 .main-content::-webkit-scrollbar-thumb {
-  background: #00b0ff;
+  background: #00b0ff; /* Scrollbar thumb color */
   border-radius: 4px;
   opacity: 0;
   transition: opacity 0.3s;
 }
 
 .main-content:hover::-webkit-scrollbar-thumb {
-  opacity: 1;
+  opacity: 1; /* Show scrollbar on hover */
 }
 
+/* --- Rainbow Text Effect (for Polaris logo/titles) --- */
 .rainbow-text-yellowwhite {
   background: linear-gradient(270deg, yellow, white, yellow);
   background-size: 400% 400%;
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: flow 5s linear infinite;
 }
@@ -165,43 +188,16 @@ hr {
   100% { background-position: 100% 50%; }
 }
 
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-}
-
-.modal-backdrop.show {
-  display: flex;
-  animation: fadeIn 0.3s ease;
-}
-
+/* --- App Card (general card style) --- */
 .app-card {
-  background: #202c45;
+  background: #202c45; /* App card background */
   border-radius: 20px;
   padding: 30px;
-  width: 90%;
-  max-width: 600px;
+  width: 100%; /* Default width for full-width cards */
+  max-width: 800px; /* Max width for general app cards */
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
-  animation: popIn 0.4s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes popIn {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  border: 1px solid rgba(255, 255, 255, 0.125); /* Subtle border */
+  margin-bottom: 24px; /* Space below each card */
 }
 
 .app-header {
@@ -209,6 +205,16 @@ hr {
   align-items: center;
   gap: 15px;
   margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.app-header h2 {
+    font-size: 1.8rem;
+    color: #fff;
+    margin: 0; /* Override general h2 margin */
+    border: none; /* Override general h2 border */
+    padding: 0; /* Override general h2 padding */
 }
 
 .app-icon {
@@ -216,6 +222,7 @@ hr {
   height: 64px;
   border-radius: 12px;
   object-fit: cover;
+  border: 2px solid #00b0ff; /* Icon border color */
 }
 
 .creator-info {
@@ -223,6 +230,8 @@ hr {
   align-items: center;
   gap: 10px;
   margin-bottom: 15px;
+  font-size: 0.9rem;
+  color: #ccc;
 }
 
 .creator-pic {
@@ -230,6 +239,7 @@ hr {
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
+  border: 1px solid #00b0ff;
 }
 
 .tags {
@@ -240,7 +250,7 @@ hr {
 }
 
 .tag {
-  background: #334;
+  background: #334a6a; /* Tag background color */
   color: #aad;
   padding: 4px 10px;
   border-radius: 8px;
@@ -264,17 +274,388 @@ hr {
   background: #4a6fa5;
 }
 
+/* --- Login Page Specific Styles (test.html) --- */
+.login-card {
+  max-width: 450px; /* Slightly adjusted max-width for login card */
+  margin: 40px auto; /* Center the card horizontally */
+  padding: 30px; /* Default app-card padding */
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left; /* Align labels and inputs to the left */
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 12px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  background: #1a233a; /* Input background */
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus {
+  border-color: #00b0ff; /* Focus highlight */
+  box-shadow: 0 0 0 3px rgba(0, 176, 255, 0.3);
+}
+
+.login-buttons {
+  display: flex;
+  justify-content: center; /* Center the buttons */
+  gap: 20px; /* Space between login and register buttons */
+  margin-top: 30px;
+}
+
+.login-buttons button {
+  flex: 1; /* Allow buttons to grow */
+  max-width: 180px; /* Max width for each button */
+  padding: 14px 28px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+#loginBtn {
+  background: #00b0ff; /* Primary action button */
+  color: #fff;
+}
+
+#loginBtn:hover {
+  background: #0099e6; /* Darker blue on hover */
+  transform: translateY(-2px);
+}
+
+#registerBtn {
+  background: #3c5b8e; /* Secondary action button */
+  color: #fff;
+}
+
+#registerBtn:hover {
+  background: #4a6fa5;
+  transform: translateY(-2px);
+}
+
+/* XP Bonus Section (reuses app-card styles) */
+#xpBonusSection {
+  padding: 25px; /* Slightly less padding than default app-card */
+  max-width: 500px; /* Adjust max-width for XP bonus section */
+  margin: 0 auto 24px; /* Center and add bottom margin */
+  text-align: center;
+}
+
+#xpBonusSection h2 {
+  font-size: 1.6rem;
+  color: #00b0ff;
+  margin-bottom: 10px;
+  border-bottom: none; /* Override for this h2 */
+  padding-bottom: 0; /* Override for this h2 */
+}
+
+#xpBonusMessage {
+  color: #ccc;
+  font-size: 1.05rem;
+  margin-bottom: 20px;
+}
+
+#claimXpBtn {
+  background: #28a745; /* Green for claim button */
+  color: #fff;
+  padding: 14px 30px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.05rem;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+#claimXpBtn:hover:not(:disabled) {
+  background: #218838;
+  transform: translateY(-2px);
+}
+
+#claimXpBtn:disabled {
+  background: #6c757d; /* Gray when disabled */
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+/* --- Custom Popup Styles (Replaced Modal Backdrop/App-card) --- */
+#custom-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6); /* Darker, slightly more opaque backdrop */
+  backdrop-filter: blur(8px); /* Slightly less blur than your original modal */
+  -webkit-backdrop-filter: blur(8px); /* Safari support */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top of everything */
+  opacity: 0; /* Start hidden for fade-in */
+  pointer-events: none; /* Allow clicks through when hidden */
+  transition: opacity 0.3s ease; /* Smooth fade-in/out */
+}
+
+#custom-popup-overlay.show {
+  opacity: 1;
+  pointer-events: auto; /* Enable clicks when visible */
+}
+
+#custom-popup-box {
+  background: #202c45; /* Matches your app-card background */
+  border-radius: 20px; /* Rounded corners */
+  padding: 30px;
+  width: 90%;
+  max-width: 450px; /* Slightly wider for better message display */
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  text-align: center;
+  color: #fff;
+  position: relative; /* For the close button if added later */
+  transform: scale(0.95); /* Start slightly smaller for pop-in */
+  opacity: 0; /* Start hidden for pop-in */
+  transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth pop-in */
+}
+
+#custom-popup-overlay.show #custom-popup-box {
+  transform: scale(1);
+  opacity: 1;
+}
+
+#custom-popup-title {
+  color: #00b0ff; /* Polaris blue for popup title */
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.8rem; /* Slightly larger title */
+  font-weight: 700;
+}
+
+#custom-popup-message {
+  margin-bottom: 25px;
+  line-height: 1.6;
+  font-size: 1.1rem;
+  color: #e0e0e0; /* Slightly off-white for message text */
+}
+
+#custom-popup-button {
+  background: #28a745; /* Green for OK button */
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 10px; /* Match other buttons */
+  cursor: pointer;
+  font-size: 1.05rem;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+#custom-popup-button:hover {
+  background: #218838;
+  transform: translateY(-2px);
+}
+
+/* Close button - assuming it might be added in HTML for the popup */
 .close-button {
   background: none;
   border: none;
   color: #aaa;
-  font-size: 1.2rem;
+  font-size: 1.5rem; /* Larger for better tap target */
   cursor: pointer;
   position: absolute;
-  top: 20px;
-  right: 25px;
+  top: 15px;
+  right: 20px;
+  transition: color 0.3s ease;
 }
 
 .close-button:hover {
   color: white;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    padding: 10px; /* Reduced padding on smaller screens */
+    height: auto; /* Allow container to grow/shrink with content */
+    min-height: 100vh; /* Ensure it still takes full height */
+  }
+
+  .sidebar {
+    width: 100%;
+    border-radius: 16px 16px 0 0; /* Rounded top corners when stacked */
+    padding: 20px;
+  }
+
+  .sidebar h2 {
+    margin-bottom: 15px;
+  }
+
+  .sidebar nav ul {
+    flex-direction: row; /* Horizontal nav on smaller screens */
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+
+  .sidebar nav ul li a {
+    padding: 8px 12px;
+    font-size: 0.95rem;
+  }
+
+  .sidebar .buttons {
+    flex-direction: row; /* Horizontal buttons below nav */
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .sidebar .buttons button {
+    flex: 1; /* Allow buttons to share space */
+    min-width: 120px; /* Ensure buttons don't get too small */
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .main-content {
+    padding: 25px;
+    border-radius: 0 0 16px 16px; /* Rounded bottom corners when stacked */
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  .login-card {
+    margin: 20px auto;
+    padding: 25px;
+  }
+
+  .login-buttons {
+    flex-direction: column; /* Stack login/register buttons vertically */
+    gap: 10px;
+  }
+
+  .login-buttons button {
+    max-width: 100%; /* Full width for stacked buttons */
+    padding: 12px 20px;
+  }
+
+  #xpBonusSection {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 500px) {
+  .container {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .sidebar {
+    padding: 15px;
+  }
+
+  .sidebar h2 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+  }
+
+  .sidebar nav ul {
+    gap: 5px;
+  }
+
+  .sidebar nav ul li a {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+
+  .main-content {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 1.7rem;
+    margin-bottom: 18px;
+  }
+
+  .app-card {
+    padding: 20px;
+  }
+
+  .app-header {
+    flex-direction: column; /* Stack app header elements */
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .app-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .app-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .login-card {
+    padding: 20px;
+  }
+
+  .form-group input {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+
+  #xpBonusSection {
+    padding: 15px;
+  }
+
+  #xpBonusSection h2 {
+    font-size: 1.4rem;
+  }
+
+  #claimXpBtn {
+    padding: 12px 25px;
+    font-size: 1rem;
+  }
+
+  #custom-popup-box {
+      padding: 25px;
+      max-width: 320px;
+  }
+  #custom-popup-title {
+      font-size: 1.6rem;
+  }
+  #custom-popup-message {
+      font-size: 1rem;
+  }
+  #custom-popup-button {
+      padding: 10px 25px;
+      font-size: 1rem;
+  }
 }
