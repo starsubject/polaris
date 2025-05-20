@@ -36,6 +36,7 @@
       getFirestore,
       doc,
       getDoc,
+      setDoc,
       updateDoc,
       arrayUnion,
       collection,
@@ -63,7 +64,7 @@
     const community  = (p.get("community")||"").toLowerCase();
     const reqChannel = (p.get("channel")  ||"").toLowerCase();
 
-    const userEl = document.getElementById("username");
+    const userEl = document.getElementById("chatUsername");
     const listEl = document.getElementById("channelList");
     const msgsEl = document.getElementById("messages");
     const titleEl= document.getElementById("chatTitle");
